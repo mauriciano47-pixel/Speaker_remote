@@ -137,6 +137,56 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // ===== PWA Install Logic =====
+    let deferredPrompt = null;
+    const pwaInstallBtn = document.getElementById('pwa-install-btn');
+    const installHint = document.getElementById('install-hint');
+    const installFallback = document.getElementById('install-fallback');
+
+    // Capturar el evento beforeinstallprompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (pwaInstallBtn) {
+            pwaInstallBtn.style.display = '';
+        }
+    });
+
+    // Botón de instalación PWA
+    if (pwaInstallBtn) {
+        pwaInstallBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const result = await deferredPrompt.userChoice;
+                if (result.outcome === 'accepted') {
+                    if (installHint) {
+                        installHint.hidden = false;
+                    }
+                    pwaInstallBtn.textContent = '✅ Instalada';
+                    pwaInstallBtn.disabled = true;
+                }
+                deferredPrompt = null;
+            } else {
+                // Mostrar instrucciones manuales si el prompt no está disponible
+                if (installFallback) {
+                    installFallback.hidden = false;
+                }
+            }
+        });
+    }
+
+    // Detectar si ya está instalada
+    window.addEventListener('appinstalled', () => {
+        deferredPrompt = null;
+        if (pwaInstallBtn) {
+            pwaInstallBtn.textContent = '✅ Instalada';
+            pwaInstallBtn.disabled = true;
+        }
+        if (installHint) {
+            installHint.hidden = false;
+        }
+    });
+
     // Register Service Worker for PWA
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').catch(err => console.log('ServiceWorker error:', err));

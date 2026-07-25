@@ -1,21 +1,62 @@
-# Speaker Remote Pro 🔊⚡
+# 🔊 Speaker Remote Pro
 
-**Speaker Remote Pro** es una aplicación nativa Android (desarrollada en Kotlin con Jetpack Compose) y aplicación web PWA diseñada para el control remoto maestro, interrupción de foco de señal (Audio Focus takeover), control de volumen master, silenciado instantáneo (Mute) y ecualización de parlantes Bluetooth.
+**Controlador y Gestor de Parlantes Bluetooth** — Interrupción de señal audio focus, control remoto de volumen, mute y ecualizador.
 
-## 🚀 Características Principales
+[![Versión](https://img.shields.io/badge/versión-v1.1.0-blue)](https://github.com/mauriciano47-pixel/Speaker_remote)
+[![GitHub Pages](https://img.shields.io/badge/demo-live-brightgreen)](https://mauriciano47-pixel.github.io/Speaker_remote/)
+[![PWA](https://img.shields.io/badge/PWA-instalable-purple)](https://mauriciano47-pixel.github.io/Speaker_remote/)
 
-1. **⚡ Interrupción de Señal Audio Focus**: Fusta el foco exclusivo de audio (`AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE`) anulando transmisiones secundarias en el parlante.
-2. **🔊 Control Master de Volumen & Mute**: Ajuste preciso de decibelios y nivel de volumen con botón de corte instantáneo de audio.
-3. **🎛️ Ecualizador DSP & Bass Boost**: Aumento dinámico de graves y frecuencias agudas.
-4. **📡 Monitor de Señal Bluetooth RSSI**: Inspección en tiempo real del nivel de señal en dBm de los parlantes vinculados.
-5. **🌐 Aplicación Web PWA / Landing Page**: Interfaz responsive accesible desde el navegador con soporte de Web Bluetooth API.
+## 🌐 Demo en Vivo
 
-## 📁 Estructura del Proyecto
+👉 **[https://mauriciano47-pixel.github.io/Speaker_remote/](https://mauriciano47-pixel.github.io/Speaker_remote/)**
 
-* `app/src/main/java/com/example/speakerremote/` — Código fuente nativo en Kotlin (`MainActivity.kt`, `audio/AudioFocusController.kt`, `bluetooth/BluetoothSpeakerManager.kt`).
-* `index.html`, `index.css`, `app.js` — Frontend Web PWA y landing page interactiva.
-* `manifest.json`, `sw.js` — Configuración de Service Worker y manifiesto PWA.
-* `build.gradle.kts`, `settings.gradle.kts` — Archivos de construcción Gradle.
+## ⚡ Funciones
 
-## 🌐 Producción & GitHub
-* Repositorio: [github.com/maurociano47-pixel/Speaker_remote](https://github.com/maurociano47-pixel/Speaker_remote)
+| Función | Descripción |
+|---------|-------------|
+| 🔊 Volumen Master | Control de 0-100% con slider en tiempo real |
+| 🔇 Mute Ultra-Rápido | Silencia sin desconectar Bluetooth |
+| ⚡ Audio Focus Interrupter | Fuerza foco exclusivo anulando otras fuentes |
+| 🎛️ Ecualizador DSP | Bass Boost + Treble (0 a +12 dB) |
+| 📡 Monitor RSSI | Señal en dBm en tiempo real |
+| 🎵 Controles Playback | Play/Pausa, Anterior/Siguiente |
+| 📊 Visualizador Audio | Canvas animado de frecuencias |
+| 📡 Web Bluetooth API | Escaneo y conexión directa desde el navegador |
+| 📲 PWA Instalable | Se instala como app nativa en Android/iOS |
+
+## 📲 Instalación
+
+1. Abre **Chrome/Edge** en tu celular
+2. Visita la [demo en vivo](https://mauriciano47-pixel.github.io/Speaker_remote/)
+3. Toca **"Instalar App (PWA)"** o menú (⋮) → **"Instalar aplicación"**
+4. ¡Listo! La app aparece en tu pantalla de inicio
+
+## 🛠️ Tecnologías
+
+- HTML5 + CSS3 (Glassmorphism, Gradientes, Animaciones)
+- JavaScript Vanilla (ES6+)
+- Web Bluetooth API
+- Service Worker + Cache API (offline)
+- PWA Manifest (standalone, maskable icons)
+- GitHub Pages
+
+## 📁 Estructura
+
+```
+Speaker_remote/
+├── index.html          → Página principal
+├── index.css           → Estilos premium
+├── app.js              → Lógica + PWA install
+├── sw.js               → Service Worker v2
+├── manifest.json       → Manifest PWA
+├── icon-192.png        → Ícono 192x192
+├── icon-512.png        → Ícono 512x512
+├── VERSION.txt         → Versión actual
+└── README.md           → Este archivo
+```
+
+## 👤 Créditos
+
+Desarrollado por **Mauricio (mauriciano47-pixel)** & **Antigravity AI**.
+
+© 2026 Speaker Remote Pro

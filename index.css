@@ -1080,6 +1080,124 @@ input:checked + .slider:before {
     color: #0D0D12;
 }
 
+/* Version Chip Header & Footer */
+.version-chip {
+    background: rgba(0, 206, 201, 0.15);
+    border: 1px solid rgba(0, 206, 201, 0.4);
+    color: #00CEC9;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 6px;
+    transition: all 0.2s ease;
+    vertical-align: middle;
+}
+
+.version-chip:hover {
+    background: #00CEC9;
+    color: #0D0D12;
+    transform: scale(1.06);
+    box-shadow: 0 0 12px rgba(0, 206, 201, 0.5);
+}
+
+.footer-ver-link {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0 4px;
+}
+
+.footer-ver-link:hover {
+    color: #fff;
+}
+
+.btn-secondary-modal {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: none !important;
+}
+
+.btn-secondary-modal:hover {
+    background: rgba(255, 255, 255, 0.16) !important;
+}
+
+/* Changelog Styles */
+.changelog-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.changelog-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.changelog-item.current-ver {
+    background: rgba(108, 92, 231, 0.12);
+    border-color: rgba(108, 92, 231, 0.4);
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.15);
+}
+
+.changelog-badge-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ver-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 8px;
+}
+
+.ver-badge.badge-active {
+    background: linear-gradient(135deg, #6C5CE7, #00CEC9);
+    color: #fff;
+}
+
+.ver-date {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.changelog-item h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+.changelog-item ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.changelog-item ul li strong {
+    color: #fff;
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.96); }
     to { opacity: 1; transform: scale(1); }

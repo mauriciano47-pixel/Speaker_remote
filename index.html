@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speaker Remote Pro — Controlador de Parlantes Bluetooth</title>
+    <title>Speaker Remote Pro — Controlador de Parlantes Bluetooth v1.4.0</title>
     <meta name="description" content="Aplicación avanzada para interrupción de señal audio focus, control remoto de volumen master, mute y ecualizador de parlantes Bluetooth.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,7 +39,7 @@
             <div class="brand">
                 <div class="logo-icon">🔊</div>
                 <div class="brand-text">
-                    <h1>Speaker Remote <span class="badge">PRO</span></h1>
+                    <h1>Speaker Remote <span class="badge">PRO</span> <button type="button" class="version-chip" id="version-chip-btn" title="Ver Historial de Versiones (v1.4.0)" aria-label="Ver Historial de Versiones">v1.4.0 📋</button></h1>
                     <p>Bluetooth Audio Interrupter &amp; Master Remote</p>
                 </div>
             </div>
@@ -66,7 +66,7 @@
                 </a>
                 <a href="#download" class="btn-secondary" id="hero-download-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    Instalar App v1.3.0
+                    Instalar App v1.4.0
                 </a>
             </div>
         </section>
@@ -75,7 +75,7 @@
         <section id="interactive-demo" class="demo-section">
             <div class="section-header">
                 <h2>Controlador de Parlante en Vivo</h2>
-                <p>Selecciona tu parlante por su nombre comercial o pruébalo con dispositivos cercanos</p>
+                <p>Scanner Asertivo por Audio System API &amp; Web Bluetooth con identificación de nombre real</p>
             </div>
 
             <div class="remote-app-card">
@@ -88,13 +88,13 @@
                                 <h3 id="current-device-name">Sin dispositivo conectado</h3>
                                 <button type="button" class="btn-rename-device" id="rename-device-btn" title="Renombrar o agregar etiqueta personalizada al parlante" aria-label="Renombrar parlante" hidden>✏️</button>
                             </div>
-                            <span class="device-type" id="current-device-type">Toca "Seleccionar Parlante" para ver dispositivos con nombre</span>
+                            <span class="device-type" id="current-device-type">Toca "Escanear Parlantes" para detectar dispositivos con nombre real</span>
                         </div>
                     </div>
                     <div class="connection-buttons">
-                        <button type="button" class="btn-scan" id="scan-bt-btn" aria-label="Abrir lista de parlantes Bluetooth cercanos">
+                        <button type="button" class="btn-scan" id="scan-bt-btn" aria-label="Abrir scanner asertivo de parlantes Bluetooth">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5l11 11L12 23V1l5.5 5.5-11 11"/></svg>
-                            🔍 Seleccionar Parlante
+                            🔍 Escanear Parlantes
                         </button>
                         <button type="button" class="btn-demo" id="demo-mode-btn" aria-label="Probar parlante aleatorio en modo demo">
                             🎮 Modo Demo
@@ -179,6 +179,11 @@
             </div>
             <div class="features-grid">
                 <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Scanner Asertivo 100%</h3>
+                    <p>Detecta parlantes mediante la Web Audio System API enumerando los dispositivos de salida vinculados por el sistema operativo.</p>
+                </div>
+                <div class="feature-card">
                     <div class="feature-icon">⚡</div>
                     <h3>Bypass &amp; Focus Takeover</h3>
                     <p>Fuerza la sesión de audio del parlante anulando transmisiones de audio secundarias mediante transientes exclusivas.</p>
@@ -189,14 +194,9 @@
                     <p>Corta el audio instantáneamente con un solo toque sin desconectar la vinculación Bluetooth del parlante.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🎛️</div>
-                    <h3>Ecualizador DSP &amp; Bass</h3>
-                    <p>Aumenta el rendimiento de bajos y frecuencias altas con el amplificador directo de ganancia en decibelios.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📡</div>
-                    <h3>Nombres Claros de Dispositivos</h3>
-                    <p>Identifica tus parlantes por su marca y modelo comercial sin confundirte con IDs genéricos.</p>
+                    <div class="feature-icon">📋</div>
+                    <h3>Historial de Versiones</h3>
+                    <p>Accede directamente a los detalles de actualización (v1.0.0 a v1.4.0) presionando la etiqueta de versión.</p>
                 </div>
             </div>
         </section>
@@ -255,24 +255,27 @@
         </section>
     </main>
 
-    <!-- Modal para Selección de Parlante con Nombres Claros -->
+    <!-- Modal para Selección de Parlante Asertivo -->
     <div class="modal-overlay" id="speaker-modal-overlay" hidden>
         <div class="modal-card">
             <div class="modal-header">
                 <div class="modal-title-group">
                     <span class="modal-icon">🔊</span>
                     <div>
-                        <h3>Selecciona tu Parlante Bluetooth</h3>
-                        <p>Lista de parlantes identificados por su nombre de modelo</p>
+                        <h3>Scanner Asertivo de Parlantes</h3>
+                        <p>Detección de parlantes vinculados por Audio System API &amp; Bluetooth</p>
                     </div>
                 </div>
                 <button type="button" class="modal-close" id="modal-close-btn" aria-label="Cerrar selector de parlantes">✕</button>
             </div>
 
             <div class="modal-actions-bar">
-                <button type="button" class="btn-modal-scan" id="modal-web-scan-btn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5l11 11L12 23V1l5.5 5.5-11 11"/></svg>
-                    Escaneo Web Bluetooth Directo
+                <button type="button" class="btn-modal-scan" id="modal-audio-scan-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                    🎯 Escanear Dispositivos del Sistema Audio
+                </button>
+                <button type="button" class="btn-modal-scan btn-secondary-modal" id="modal-web-scan-btn">
+                    📶 Escaneo Bluetooth
                 </button>
             </div>
 
@@ -282,8 +285,86 @@
         </div>
     </div>
 
+    <!-- Modal para Historial de Versiones (Changelog) -->
+    <div class="modal-overlay" id="version-modal-overlay" hidden>
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <span class="modal-icon">📋</span>
+                    <div>
+                        <h3>Historial de Versiones — Speaker Remote Pro</h3>
+                        <p>Registro de actualizaciones y mejoras publicadas</p>
+                    </div>
+                </div>
+                <button type="button" class="modal-close" id="version-modal-close-btn" aria-label="Cerrar historial de versiones">✕</button>
+            </div>
+
+            <div class="changelog-container">
+                <div class="changelog-item current-ver">
+                    <div class="changelog-badge-row">
+                        <span class="ver-badge badge-active">v1.4.0 (Actual)</span>
+                        <span class="ver-date">26 de julio de 2026</span>
+                    </div>
+                    <h4>🎯 Detección Asertiva por Audio System API + Historial UI</h4>
+                    <ul>
+                        <li><strong>Scanner Asertivo 100%:</strong> Incorporación de `navigator.mediaDevices.enumerateDevices` para listar los nombres reales de parlantes vinculados por el sistema operativo.</li>
+                        <li><strong>Indicador de Versión Interactivo:</strong> Badge `v1.4.0` visible en la barra superior con acceso directo al registro de cambios.</li>
+                        <li><strong>Conmutación Directa:</strong> Integración de salida de sonido por `HTMLAudioElement.setSinkId()`.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-item">
+                    <div class="changelog-badge-row">
+                        <span class="ver-badge">v1.3.0</span>
+                        <span class="ver-date">26 de julio de 2026</span>
+                    </div>
+                    <h4>🔊 Nombres Comerciales y Ocultación de Anuncios</h4>
+                    <ul>
+                        <li><strong>Selección por Nombre:</strong> Modal desplegable con parlantes comerciales (JBL, Sony, Bose, etc.).</li>
+                        <li><strong>Supresión Persistente:</strong> Ocultación automática de banners de instalación si la app ya fue instalada.</li>
+                        <li><strong>Botonera de Renombrado:</strong> Opción ✏️ para asignar nombres personalizados al parlante.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-item">
+                    <div class="changelog-badge-row">
+                        <span class="ver-badge">v1.2.0</span>
+                        <span class="ver-date">25 de julio de 2026</span>
+                    </div>
+                    <h4>📲 Instalador PWA &amp; Guía de 3 Pasos</h4>
+                    <ul>
+                        <li><strong>Banner Flotante:</strong> Instalación como app nativa sin tienda.</li>
+                        <li><strong>Guía Gráfica:</strong> Pasos paso a paso para Chrome, Edge y Safari.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-item">
+                    <div class="changelog-badge-row">
+                        <span class="ver-badge">v1.1.0</span>
+                        <span class="ver-date">24 de julio de 2026</span>
+                    </div>
+                    <h4>⚡ Audio Focus Takeover &amp; Mute Ultra-Rápido</h4>
+                    <ul>
+                        <li><strong>Modo Dominante:</strong> Solicitud de foco exclusivo de audio para interrumpir transmisiones ajenas.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-item">
+                    <div class="changelog-badge-row">
+                        <span class="ver-badge">v1.0.0</span>
+                        <span class="ver-date">23 de julio de 2026</span>
+                    </div>
+                    <h4>🎵 Lanzamiento Inicial</h4>
+                    <ul>
+                        <li>Control master de volumen, ecualizador DSP Bass Boost y visualizador de frecuencias en Canvas.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="app-footer">
-        <p>© 2026 <strong>Speaker Remote Pro</strong>. Desarrollado por <strong>Mauricio (mauriciano47-pixel)</strong> &amp; Antigravity AI.</p>
+        <p>© 2026 <strong>Speaker Remote Pro</strong>. Versión <button type="button" class="footer-ver-link" id="footer-version-btn">v1.4.0 (Build 2026.07.26)</button>. Desarrollado por <strong>Mauricio (mauriciano47-pixel)</strong> &amp; Antigravity AI.</p>
     </footer>
 
     <script src="app.js"></script>

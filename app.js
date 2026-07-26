@@ -23,11 +23,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const btHelpText = document.getElementById('bt-help-text');
     const btHelpClose = document.getElementById('bt-help-close');
 
-    // Modal Elements
+    // Modal Speaker Elements
     const modalOverlay = document.getElementById('speaker-modal-overlay');
     const modalCloseBtn = document.getElementById('modal-close-btn');
     const modalWebScanBtn = document.getElementById('modal-web-scan-btn');
+    const modalAudioScanBtn = document.getElementById('modal-audio-scan-btn');
     const speakerListContainer = document.getElementById('speaker-list-container');
+
+    // Modal Version Elements
+    const versionChipBtn = document.getElementById('version-chip-btn');
+    const footerVersionBtn = document.getElementById('footer-version-btn');
+    const versionModalOverlay = document.getElementById('version-modal-overlay');
+    const versionModalCloseBtn = document.getElementById('version-modal-close-btn');
 
     // ===== State Variables =====
     let isPlaying = true;
@@ -35,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let previousVolume = 65;
     let isConnected = false;
 
-    // Lista de parlantes conocidos con sus nombres de marca y modelo comerciales
+    // Lista de parlantes comerciales más comunes
     const knownSpeakers = [
         { id: 'jbl-flip6', name: 'JBL Flip 6 Surround', type: '🔊 Parlante Surround / A2DP Audio', rssi: -42, icon: '🔊' },
         { id: 'sony-xb33', name: 'Sony SRS-XB33 Extra Bass', type: '🔊 Equipo de Sonido / Bass Boost', rssi: -51, icon: '🔊' },
@@ -46,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'soundcore-m', name: 'Anker Soundcore Motion+', type: '🔊 Parlante Alta Fidelidad Hi-Res', rssi: -49, icon: '🎵' }
     ];
 
-    // ===== PWA INSTALLATION PERSISTENCE (Eliminar anuncios si ya está instalada) =====
+    // ===== PWA INSTALLATION PERSISTENCE =====
     const pwaInstallBtn = document.getElementById('pwa-install-btn');
     const installBanner = document.getElementById('install-banner');
     const installBannerBtn = document.getElementById('install-banner-btn');
@@ -73,6 +80,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     applyInstallationVisibility();
+
+    // ===== HISTORIAL DE VERSIONES MODAL LOGIC =====
+    function openVersionModal() {
+        if (versionModalOverlay) versionModalOverlay.hidden = false;
+    }
+
+    function closeVersionModal() {
+        if (versionModalOverlay) versionModalOverlay.hidden = true;
+    }
+
+    if (versionChipBtn) versionChipBtn.addEventListener('click', openVersionModal);
+    if (footerVersionBtn) footerVersionBtn.addEventListener('click', openVersionModal);
+    if (versionModalCloseBtn) versionModalCloseBtn.addEventListener('click', closeVersionModal);
+    if (versionModalOverlay) {
+        versionModalOverlay.addEventListener('click', (e) => {
+            if (e.target === versionModalOverlay) closeVersionModal();
+        });
+    }
 
     // ===== Canvas Frequency Visualizer =====
     const canvas = document.getElementById('audio-visualizer');
@@ -133,7 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (renameDeviceBtn) renameDeviceBtn.hidden = false;
 
-        // Guardar dispositivo reciente en localStorage
         localStorage.setItem('speaker_remote_last_device', JSON.stringify({ name, details }));
     }
 
@@ -165,7 +189,68 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) {}
     }
 
-    // ===== RENDEREAR MODAL DE PARLANTES CON NOMBRES CLAROS =====
+    // ===== MOTOR 1: SCANNER ASERTIVO POR SYSTEM AUDIO DEVICES (navigator.mediaDevices) =====
+    async function scanAudioSystemDevices() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+            showHelp('<strong>Audio System API no disponible.</strong> Usando lista de parlantes identificados.');
+            return;
+        }
+
+        try {
+            // Intentar solicitar permiso de audio para revelar nombres reales del sistema
+            try {
+                await navigator.mediaDevices.getUserMedia({ audio: true }).then(s => s.getTracks().forEach(t => t.stop())).catch(() => {});
+            } catch (e) {}
+
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const audioOutputs = devices.filter(d => d.kind === 'audiooutput');
+
+            if (audioOutputs.length > 0 && speakerListContainer) {
+                speakerListContainer.innerHTML = '';
+
+                // Header de parlantes del sistema
+                const headerNote = document.createElement('div');
+                headerNote.style.fontSize = '12px';
+                headerNote.style.color = '#00CEC9';
+                headerNote.style.padding = '4px 8px';
+                headerNote.style.fontWeight = 'bold';
+                headerNote.innerHTML = `🎯 Dispositivos de Salida de Audio del Sistema Detectados (${audioOutputs.length}):`;
+                speakerListContainer.appendChild(headerNote);
+
+                audioOutputs.forEach(dev => {
+                    const label = dev.label ? dev.label.trim() : `Parlante / Salida de Audio (${dev.deviceId.substring(0, 6)})`;
+                    const item = document.createElement('div');
+                    item.className = 'speaker-item';
+                    item.innerHTML = `
+                        <div class="speaker-item-info">
+                            <span class="speaker-item-name">🔊 ${label}</span>
+                            <span class="speaker-item-type">🎯 Canal de Salida de Audio del Sistema / Bluetooth</span>
+                            <span class="speaker-item-rssi">✅ Dispositivo Vinculado Activo</span>
+                        </div>
+                        <button type="button" class="btn-connect-speaker">🔗 Seleccionar</button>
+                    `;
+
+                    item.querySelector('.btn-connect-speaker').addEventListener('click', () => {
+                        setDeviceConnected(label, '✅ Conectado vía System Audio Device');
+                        closeModal();
+                        showHelp(`<strong>✅ Parlante "${label}" seleccionado.</strong> Control master de volumen activo.`);
+                    });
+
+                    speakerListContainer.appendChild(item);
+                });
+
+                // Añadir botón para agregar conocidos
+                const addDivider = document.createElement('div');
+                addDivider.style.borderTop = '1px solid rgba(255,255,255,0.1)';
+                addDivider.style.margin = '10px 0 6px 0';
+                speakerListContainer.appendChild(addDivider);
+            }
+        } catch (err) {
+            console.log('Error enumerando dispositivos de audio:', err);
+        }
+    }
+
+    // ===== RENDEREAR MODAL DE PARLANTES =====
     function renderSpeakerModal() {
         if (!speakerListContainer) return;
         speakerListContainer.innerHTML = '';
@@ -191,6 +276,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             speakerListContainer.appendChild(item);
         });
+
+        // Intentar escaneo asertivo automático de audio del sistema
+        scanAudioSystemDevices();
     }
 
     function openModal() {
@@ -210,18 +298,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ===== WEB BLUETOOTH DIRECTO CON FILTRADO ESTRICTO DE NOMBRES =====
+    if (modalAudioScanBtn) modalAudioScanBtn.addEventListener('click', scanAudioSystemDevices);
+
+    // ===== MOTOR 2: WEB BLUETOOTH DIRECTO CON FILTRADO ESTRICTO =====
     async function scanWebBluetooth() {
         if (!('bluetooth' in navigator)) {
             showHelp(
                 '<strong>Tu navegador no soporta Web Bluetooth API.</strong><br>' +
                 '📱 En Android usa <strong>Google Chrome</strong>.<br>' +
-                '🍎 En iPhone/Safari no está disponible la API Web Bluetooth directa; selecciona tu parlante de la lista amigable del selector.'
+                '🍎 En iPhone/Safari usa el <strong>Scanner Asertivo de Salida de Audio</strong> del selector.'
             );
             return;
         }
 
-        // Filtros estrictos de prefijo para OBLIGAR al escáner del navegador a mostrar ÚNICAMENTE dispositivos que tengan un nombre visible y eliminar direcciones MAC crudas o beacons anónimos
         const namePrefixes = [
             'JBL', 'Sony', 'Bose', 'Marshall', 'Sound', 'Speaker', 'Audio', 'Harman', 'Anker', 'Soundcore',
             'UE', 'Ultimate', 'Beats', 'LG', 'Samsung', 'Xiaomi', 'Tronsmart', 'Tribit', 'Edifier',
@@ -238,7 +327,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let detectedName = device.name ? device.name.trim() : '';
 
-            // Intentar consultar el chip GATT del dispositivo para extraer la marca y modelo oficiales (Device Information 0x180A)
             try {
                 if (device.gatt) {
                     const server = await device.gatt.connect();

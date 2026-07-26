@@ -10,11 +10,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon-192.png" type="image/png">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <meta name="theme-color" content="#0D0D12">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Speaker Remote">
 </head>
 <body>
     <div class="bg-glow bg-glow-1"></div>
     <div class="bg-glow bg-glow-2"></div>
+
+    <!-- Banner flotante de instalación (aparece automáticamente) -->
+    <div class="install-banner" id="install-banner" hidden>
+        <div class="install-banner-content">
+            <div class="install-banner-icon">📲</div>
+            <div class="install-banner-text">
+                <strong>¡Instala Speaker Remote!</strong>
+                <span>Úsala como app en tu celular</span>
+            </div>
+            <button type="button" class="install-banner-btn" id="install-banner-btn" aria-label="Instalar la aplicación ahora">Instalar</button>
+            <button type="button" class="install-banner-close" id="install-banner-close" aria-label="Cerrar banner de instalación">✕</button>
+        </div>
+    </div>
 
     <header class="app-header">
         <div class="header-container">
@@ -22,11 +40,11 @@
                 <div class="logo-icon">🔊</div>
                 <div class="brand-text">
                     <h1>Speaker Remote <span class="badge">PRO</span></h1>
-                    <p>Bluetooth Audio Interrupter & Master Remote</p>
+                    <p>Bluetooth Audio Interrupter &amp; Master Remote</p>
                 </div>
             </div>
             <nav class="nav-links">
-                <a href="#interactive-demo" class="nav-item">Demo Web Live</a>
+                <a href="#interactive-demo" class="nav-item">Controlador</a>
                 <a href="#features" class="nav-item">Funciones</a>
                 <a href="#download" class="btn-glow" id="nav-download-btn">Instalar App</a>
             </nav>
@@ -36,7 +54,7 @@
     <main class="main-content">
         <!-- Hero Section -->
         <section class="hero-section">
-            <div class="hero-badge">⚡ Interrupción de Señal & Control de Audio Focus</div>
+            <div class="hero-badge">⚡ Interrupción de Señal &amp; Control de Audio Focus</div>
             <h2 class="hero-title">Toma el control absoluto de cualquier <span class="gradient-text">Parlante Bluetooth</span></h2>
             <p class="hero-description">
                 Gestiona el volumen master, ejecuta interrupción de señal audio focus para pausar transmisiones ajenas, fuerza silenciado instantáneo (Mute) y ajusta graves en tiempo real.
@@ -44,7 +62,7 @@
             <div class="hero-actions">
                 <a href="#download" class="btn-primary" id="hero-download-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    Instalar App v1.0.0
+                    Instalar App v1.1.0
                 </a>
                 <a href="#interactive-demo" class="btn-secondary" id="hero-demo-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -56,23 +74,38 @@
         <!-- Interactive Remote Controller Web App -->
         <section id="interactive-demo" class="demo-section">
             <div class="section-header">
-                <h2>Controlador de Parlante en Vivo (Web PWA)</h2>
-                <p>Simula o conecta dispositivos usando Web Bluetooth API</p>
+                <h2>Controlador de Parlante en Vivo</h2>
+                <p>Conecta tu parlante Bluetooth o pruébalo en modo demo</p>
             </div>
 
             <div class="remote-app-card">
-                <div class="status-header">
+                <!-- Conexión de dispositivo — más claro -->
+                <div class="connection-panel" id="connection-panel">
                     <div class="device-info">
-                        <span class="status-dot active" id="device-status-dot"></span>
+                        <span class="status-dot" id="device-status-dot"></span>
                         <div>
-                            <h3 id="current-device-name">JBL Flip 6 Surround</h3>
-                            <span class="device-type" id="current-device-type">Conectado vía Bluetooth A2DP • RSSI: -48 dBm</span>
+                            <h3 id="current-device-name">Sin dispositivo conectado</h3>
+                            <span class="device-type" id="current-device-type">Toca "Buscar Parlante" para empezar</span>
                         </div>
                     </div>
-                    <button type="button" class="btn-scan" id="scan-bt-btn" aria-label="Escanear dispositivos Bluetooth">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                        Conectar Parlante
-                    </button>
+                    <div class="connection-buttons">
+                        <button type="button" class="btn-scan" id="scan-bt-btn" aria-label="Buscar parlantes Bluetooth cercanos">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5l11 11L12 23V1l5.5 5.5-11 11"/></svg>
+                            🔍 Buscar Parlante
+                        </button>
+                        <button type="button" class="btn-demo" id="demo-mode-btn" aria-label="Activar modo demostración sin dispositivo real">
+                            🎮 Modo Demo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mensaje de ayuda para Bluetooth -->
+                <div class="bt-help-box" id="bt-help-box" hidden>
+                    <div class="bt-help-icon">ℹ️</div>
+                    <div class="bt-help-content">
+                        <p id="bt-help-text"></p>
+                    </div>
+                    <button type="button" class="bt-help-close" id="bt-help-close" aria-label="Cerrar mensaje de ayuda">✕</button>
                 </div>
 
                 <!-- Signal Interrupter Card -->
@@ -144,7 +177,7 @@
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">⚡</div>
-                    <h3>Bypass & Focus Takeover</h3>
+                    <h3>Bypass &amp; Focus Takeover</h3>
                     <p>Fuerza la sesión de audio del parlante anulando transmisiones de audio secundarias mediante transientes exclusivas.</p>
                 </div>
                 <div class="feature-card">
@@ -154,7 +187,7 @@
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🎛️</div>
-                    <h3>Ecualizador DSP & Bass</h3>
+                    <h3>Ecualizador DSP &amp; Bass</h3>
                     <p>Aumenta el rendimiento de bajos y frecuencias altas con el amplificador directo de ganancia en decibelios.</p>
                 </div>
                 <div class="feature-card">
@@ -165,29 +198,62 @@
             </div>
         </section>
 
-        <!-- Download & Repository Links -->
+        <!-- Instalación — Guía paso a paso -->
         <section id="download" class="download-section">
             <div class="download-card">
-                <h2>Instalar en tu Dispositivo</h2>
-                <p>Instala Speaker Remote Pro directamente desde el navegador como app nativa en tu Android, iOS o computadora.</p>
+                <h2>📲 Instalar en tu Celular</h2>
+                <p>Esta app se instala directo desde el navegador. <strong>No necesitas ir a la Play Store.</strong></p>
+
+                <!-- Botón principal PWA -->
                 <div class="download-buttons">
                     <button type="button" class="btn-download-main" id="pwa-install-btn" aria-label="Instalar Speaker Remote Pro como aplicación">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Instalar App (PWA)
+                        Instalar App Ahora
                     </button>
+                </div>
+
+                <p class="install-hint" id="install-hint" hidden>✅ ¡App instalada correctamente! Búscala en tu pantalla de inicio.</p>
+
+                <!-- Guía visual paso a paso (siempre visible como fallback) -->
+                <div class="install-guide" id="install-guide">
+                    <h3>¿No aparece el botón de instalar? Sigue estos pasos:</h3>
+                    <div class="install-steps">
+                        <div class="install-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <strong>Abre en Chrome o Edge</strong>
+                                <span>Esta página debe abrirse en el navegador <strong>Chrome</strong> o <strong>Edge</strong> de tu celular.</span>
+                            </div>
+                        </div>
+                        <div class="install-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <strong>Toca el menú ⋮ (tres puntos)</strong>
+                                <span>Está arriba a la derecha en Chrome. En Safari (iPhone) toca el botón de compartir ⬆️.</span>
+                            </div>
+                        </div>
+                        <div class="install-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <strong>Selecciona "Instalar aplicación"</strong>
+                                <span>O "Agregar a pantalla de inicio" en iPhone. ¡Listo! La app aparece como ícono.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="download-buttons" style="margin-top: 20px;">
                     <a href="https://github.com/mauriciano47-pixel/Speaker_remote" target="_blank" rel="noopener noreferrer" class="btn-github" id="github-repo-link">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                        Repositorio GitHub Oficial
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                        Ver Código en GitHub
                     </a>
                 </div>
-                <p class="install-hint" id="install-hint" hidden>✅ ¡App instalada correctamente! Búscala en tu pantalla de inicio.</p>
-                <p class="install-fallback" id="install-fallback" hidden>💡 Para instalar: abre esta página en <strong>Chrome/Edge</strong> en tu celular, toca el menú (⋮) y selecciona <strong>"Instalar aplicación"</strong> o <strong>"Agregar a pantalla de inicio"</strong>.</p>
             </div>
         </section>
     </main>
 
     <footer class="app-footer">
-        <p>© 2026 <strong>Speaker Remote Pro</strong>. Desarrollado por <strong>Mauricio (mauriciano47-pixel)</strong> & Antigravity AI.</p>
+        <p>© 2026 <strong>Speaker Remote Pro</strong>. Desarrollado por <strong>Mauricio (mauriciano47-pixel)</strong> &amp; Antigravity AI.</p>
     </footer>
 
     <script src="app.js"></script>

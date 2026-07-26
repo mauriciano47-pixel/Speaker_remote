@@ -2,7 +2,7 @@
 
 **Controlador y Gestor de Parlantes Bluetooth** — Interrupción de señal audio focus, control remoto de volumen, mute y ecualizador.
 
-[![Versión](https://img.shields.io/badge/versión-v1.1.0-blue)](https://github.com/mauriciano47-pixel/Speaker_remote)
+[![Versión](https://img.shields.io/badge/versión-v1.2.0-blue)](https://github.com/mauriciano47-pixel/Speaker_remote)
 [![GitHub Pages](https://img.shields.io/badge/demo-live-brightgreen)](https://mauriciano47-pixel.github.io/Speaker_remote/)
 [![PWA](https://img.shields.io/badge/PWA-instalable-purple)](https://mauriciano47-pixel.github.io/Speaker_remote/)
 
@@ -21,22 +21,27 @@
 | 📡 Monitor RSSI | Señal en dBm en tiempo real |
 | 🎵 Controles Playback | Play/Pausa, Anterior/Siguiente |
 | 📊 Visualizador Audio | Canvas animado de frecuencias |
-| 📡 Web Bluetooth API | Escaneo y conexión directa desde el navegador |
-| 📲 PWA Instalable | Se instala como app nativa en Android/iOS |
+| 🔍 Búsqueda Bluetooth Clara | Conexión directa mediante Web Bluetooth API con diagnósticos de ayuda |
+| 🎮 Modo Demo Instantáneo | Prueba todos los controles simulando dispositivos |
+| 📲 PWA Instalable Simplificada | Banner flotante automático + Guía gráfica de 3 pasos |
 
-## 📲 Instalación
+## 📲 Instalación Ultra-Sencilla
 
-1. Abre **Chrome/Edge** en tu celular
-2. Visita la [demo en vivo](https://mauriciano47-pixel.github.io/Speaker_remote/)
-3. Toca **"Instalar App (PWA)"** o menú (⋮) → **"Instalar aplicación"**
-4. ¡Listo! La app aparece en tu pantalla de inicio
+### Opción A (Automática):
+1. Abre **Chrome** o **Edge** en tu celular y visita la app.
+2. Toca **"Instalar"** en el **banner flotante** que aparece abajo en tu pantalla.
+
+### Opción B (Manual de 3 pasos):
+1. Abre esta página en **Google Chrome** o **Edge**.
+2. Toca el menú **⋮** (tres puntos) en la esquina superior derecha (o botón ⬆️ Compartir en iPhone).
+3. Selecciona **"Instalar aplicación"** (o *"Agregar a pantalla de inicio"*).
 
 ## 🛠️ Tecnologías
 
-- HTML5 + CSS3 (Glassmorphism, Gradientes, Animaciones)
+- HTML5 + CSS3 (Glassmorphism, Gradientes, Banner Flotante, Animaciones)
 - JavaScript Vanilla (ES6+)
-- Web Bluetooth API
-- Service Worker + Cache API (offline)
+- Web Bluetooth API + Fallbacks
+- Service Worker + Cache API (soporte offline)
 - PWA Manifest (standalone, maskable icons)
 - GitHub Pages
 
@@ -44,15 +49,15 @@
 
 ```
 Speaker_remote/
-├── index.html          → Página principal
-├── index.css           → Estilos premium
-├── app.js              → Lógica + PWA install
-├── sw.js               → Service Worker v2
-├── manifest.json       → Manifest PWA
+├── index.html          → Página principal y componentes UI
+├── index.css           → Estilos premium y responsive
+├── app.js              → Lógica de control, Bluetooth y PWA
+├── sw.js               → Service Worker v2 (cache offline)
+├── manifest.json       → Manifest PWA (Android / iOS)
 ├── icon-192.png        → Ícono 192x192
 ├── icon-512.png        → Ícono 512x512
-├── VERSION.txt         → Versión actual
-└── README.md           → Este archivo
+├── VERSION.txt         → Versión actual (v1.2.0)
+└── README.md           → Documentación del proyecto
 ```
 
 ## 👤 Créditos

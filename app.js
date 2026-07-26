@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ===== DOM Elements =====
+    // ===== Elementos DOM =====
     const volumeSlider = document.getElementById('volume-slider');
     const volPercentDisplay = document.getElementById('vol-percent-display');
     const btnMuteToggle = document.getElementById('btn-mute-toggle');
@@ -19,30 +19,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const trebleSlider = document.getElementById('treble-slider');
     const trebleVal = document.getElementById('treble-val');
     const btnPlayPause = document.getElementById('btn-play-pause');
-    const btHelpBox = document.getElementById('bt-help-box');
-    const btHelpText = document.getElementById('bt-help-text');
-    const btHelpClose = document.getElementById('bt-help-close');
 
-    // Modal Speaker Elements
+    // Modales
     const modalOverlay = document.getElementById('speaker-modal-overlay');
     const modalCloseBtn = document.getElementById('modal-close-btn');
     const modalWebScanBtn = document.getElementById('modal-web-scan-btn');
     const modalAudioScanBtn = document.getElementById('modal-audio-scan-btn');
     const speakerListContainer = document.getElementById('speaker-list-container');
 
-    // Modal Version Elements
     const versionChipBtn = document.getElementById('version-chip-btn');
     const footerVersionBtn = document.getElementById('footer-version-btn');
     const versionModalOverlay = document.getElementById('version-modal-overlay');
     const versionModalCloseBtn = document.getElementById('version-modal-close-btn');
 
-    // ===== State Variables =====
+    // ===== Estado =====
     let isPlaying = true;
     let isMuted = false;
     let previousVolume = 65;
     let isConnected = false;
 
-    // Lista de parlantes comerciales más comunes
+    // Lista de parlantes conocidos
     const knownSpeakers = [
         { id: 'jbl-flip6', name: 'JBL Flip 6 Surround', type: '🔊 Parlante Surround / A2DP Audio', rssi: -42, icon: '🔊' },
         { id: 'sony-xb33', name: 'Sony SRS-XB33 Extra Bass', type: '🔊 Equipo de Sonido / Bass Boost', rssi: -51, icon: '🔊' },
@@ -53,55 +49,35 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'soundcore-m', name: 'Anker Soundcore Motion+', type: '🔊 Parlante Alta Fidelidad Hi-Res', rssi: -49, icon: '🎵' }
     ];
 
-    // ===== PWA INSTALLATION PERSISTENCE =====
-    const pwaInstallBtn = document.getElementById('pwa-install-btn');
-    const installBanner = document.getElementById('install-banner');
-    const installBannerBtn = document.getElementById('install-banner-btn');
-    const installBannerClose = document.getElementById('install-banner-close');
-    const installHint = document.getElementById('install-hint');
-    const installGuide = document.getElementById('install-guide');
-    const downloadSection = document.getElementById('download');
-    const navDownloadBtn = document.getElementById('nav-download-btn');
-    const heroDownloadBtn = document.getElementById('hero-download-btn');
-
+    // ===== PWA — Supresión de Banners =====
     function applyInstallationVisibility() {
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
         const isInstalledLocally = localStorage.getItem('speaker_remote_installed') === 'true';
 
         if (isStandalone || isInstalledLocally) {
-            if (installBanner) installBanner.style.display = 'none';
-            if (installGuide) installGuide.style.display = 'none';
-            if (pwaInstallBtn) pwaInstallBtn.style.display = 'none';
-            if (navDownloadBtn) navDownloadBtn.style.display = 'none';
-            if (heroDownloadBtn) heroDownloadBtn.style.display = 'none';
-            if (downloadSection) downloadSection.style.display = 'none';
-            if (installHint) installHint.hidden = false;
+            ['install-banner', 'install-guide', 'pwa-install-btn', 'nav-download-btn', 'hero-download-btn', 'download'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+            const hint = document.getElementById('install-hint');
+            if (hint) hint.hidden = false;
         }
     }
-
     applyInstallationVisibility();
 
-    // ===== HISTORIAL DE VERSIONES MODAL LOGIC =====
-    function openVersionModal() {
-        if (versionModalOverlay) versionModalOverlay.hidden = false;
+    // ===== Modales (Apertura / Cierre Limpio) =====
+    function toggleModal(el, show) {
+        if (el) el.hidden = !show;
     }
 
-    function closeVersionModal() {
-        if (versionModalOverlay) versionModalOverlay.hidden = true;
-    }
+    if (versionChipBtn) versionChipBtn.addEventListener('click', () => toggleModal(versionModalOverlay, true));
+    if (footerVersionBtn) footerVersionBtn.addEventListener('click', () => toggleModal(versionModalOverlay, true));
+    if (versionModalCloseBtn) versionModalCloseBtn.addEventListener('click', () => toggleModal(versionModalOverlay, false));
+    if (versionModalOverlay) versionModalOverlay.addEventListener('click', (e) => { if (e.target === versionModalOverlay) toggleModal(versionModalOverlay, false); });
 
-    if (versionChipBtn) versionChipBtn.addEventListener('click', openVersionModal);
-    if (footerVersionBtn) footerVersionBtn.addEventListener('click', openVersionModal);
-    if (versionModalCloseBtn) versionModalCloseBtn.addEventListener('click', closeVersionModal);
-    if (versionModalOverlay) {
-        versionModalOverlay.addEventListener('click', (e) => {
-            if (e.target === versionModalOverlay) closeVersionModal();
-        });
-    }
-
-    // ===== Canvas Frequency Visualizer =====
+    // ===== Visualizador Canvas =====
     const canvas = document.getElementById('audio-visualizer');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas ? canvas.getContext('2d') : null;
 
     function drawVisualizer() {
         if (!ctx) return;
@@ -112,42 +88,20 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < bars; i++) {
             let height = isPlaying ? Math.random() * (canvas.height * 0.8) + 10 : 4;
             if (isMuted) height = 2;
-
             const x = i * (barWidth + 2);
             const y = canvas.height - height;
 
             const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
             gradient.addColorStop(0, '#6C5CE7');
             gradient.addColorStop(1, '#00CEC9');
-
             ctx.fillStyle = gradient;
             ctx.fillRect(x, y, barWidth, height);
         }
-
         requestAnimationFrame(drawVisualizer);
     }
-
     drawVisualizer();
 
-    // ===== Función auxiliar: mostrar mensaje de ayuda =====
-    function showHelp(message) {
-        if (btHelpText && btHelpBox) {
-            btHelpText.innerHTML = message;
-            btHelpBox.hidden = false;
-        }
-    }
-
-    function hideHelp() {
-        if (btHelpBox) {
-            btHelpBox.hidden = true;
-        }
-    }
-
-    if (btHelpClose) {
-        btHelpClose.addEventListener('click', hideHelp);
-    }
-
-    // ===== Marcar dispositivo como conectado =====
+    // ===== Conexión de Dispositivo =====
     function setDeviceConnected(name, details) {
         isConnected = true;
         currentDeviceName.textContent = name;
@@ -155,32 +109,25 @@ document.addEventListener('DOMContentLoaded', () => {
         deviceStatusDot.classList.add('active');
         connectionPanel.classList.add('connected');
         scanBtBtn.innerHTML = `🔗 Conectado: ${name.length > 18 ? name.substring(0, 18) + '...' : name}`;
-        
         if (renameDeviceBtn) renameDeviceBtn.hidden = false;
 
         localStorage.setItem('speaker_remote_last_device', JSON.stringify({ name, details }));
     }
 
-    // Renombrar dispositivo personalizado
     if (renameDeviceBtn) {
         renameDeviceBtn.addEventListener('click', () => {
             if (!isConnected) return;
-            const currentName = currentDeviceName.textContent;
-            const newName = prompt('Escribe el nombre o etiqueta personalizada para tu parlante:', currentName);
+            const newName = prompt('Nombre o etiqueta personalizada para tu parlante:', currentDeviceName.textContent);
             if (newName && newName.trim() !== '') {
                 const cleanName = newName.trim();
                 currentDeviceName.textContent = cleanName;
                 scanBtBtn.innerHTML = `🔗 Conectado: ${cleanName.length > 18 ? cleanName.substring(0, 18) + '...' : cleanName}`;
-                localStorage.setItem('speaker_remote_last_device', JSON.stringify({
-                    name: cleanName,
-                    details: currentDeviceType.textContent
-                }));
-                showHelp(`<strong>✏️ Parlante renombrado a "${cleanName}"</strong>.`);
+                localStorage.setItem('speaker_remote_last_device', JSON.stringify({ name: cleanName, details: currentDeviceType.textContent }));
             }
         });
     }
 
-    // Cargar último dispositivo conectado si existe
+    // Cargar último dispositivo guardado
     const lastDevice = localStorage.getItem('speaker_remote_last_device');
     if (lastDevice) {
         try {
@@ -189,15 +136,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) {}
     }
 
-    // ===== MOTOR 1: SCANNER ASERTIVO POR SYSTEM AUDIO DEVICES (navigator.mediaDevices) =====
+    // ===== SCANNER 1: Dispositivos de Audio del Sistema (navigator.mediaDevices) =====
     async function scanAudioSystemDevices() {
-        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-            showHelp('<strong>Audio System API no disponible.</strong> Usando lista de parlantes identificados.');
-            return;
-        }
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
 
         try {
-            // Intentar solicitar permiso de audio para revelar nombres reales del sistema
             try {
                 await navigator.mediaDevices.getUserMedia({ audio: true }).then(s => s.getTracks().forEach(t => t.stop())).catch(() => {});
             } catch (e) {}
@@ -207,14 +150,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (audioOutputs.length > 0 && speakerListContainer) {
                 speakerListContainer.innerHTML = '';
-
-                // Header de parlantes del sistema
                 const headerNote = document.createElement('div');
                 headerNote.style.fontSize = '12px';
                 headerNote.style.color = '#00CEC9';
                 headerNote.style.padding = '4px 8px';
                 headerNote.style.fontWeight = 'bold';
-                headerNote.innerHTML = `🎯 Dispositivos de Salida de Audio del Sistema Detectados (${audioOutputs.length}):`;
+                headerNote.innerHTML = `🎯 Dispositivos de Salida de Audio del Sistema (${audioOutputs.length}):`;
                 speakerListContainer.appendChild(headerNote);
 
                 audioOutputs.forEach(dev => {
@@ -224,33 +165,41 @@ document.addEventListener('DOMContentLoaded', () => {
                     item.innerHTML = `
                         <div class="speaker-item-info">
                             <span class="speaker-item-name">🔊 ${label}</span>
-                            <span class="speaker-item-type">🎯 Canal de Salida de Audio del Sistema / Bluetooth</span>
-                            <span class="speaker-item-rssi">✅ Dispositivo Vinculado Activo</span>
+                            <span class="speaker-item-type">🎯 Salida de Audio del Sistema / Bluetooth</span>
+                            <span class="speaker-item-rssi">✅ Vinculado al Sistema</span>
                         </div>
                         <button type="button" class="btn-connect-speaker">🔗 Seleccionar</button>
                     `;
-
                     item.querySelector('.btn-connect-speaker').addEventListener('click', () => {
-                        setDeviceConnected(label, '✅ Conectado vía System Audio Device');
-                        closeModal();
-                        showHelp(`<strong>✅ Parlante "${label}" seleccionado.</strong> Control master de volumen activo.`);
+                        setDeviceConnected(label, '✅ Conectado vía Salida Audio del Sistema');
+                        toggleModal(modalOverlay, false);
                     });
-
                     speakerListContainer.appendChild(item);
                 });
-
-                // Añadir botón para agregar conocidos
-                const addDivider = document.createElement('div');
-                addDivider.style.borderTop = '1px solid rgba(255,255,255,0.1)';
-                addDivider.style.margin = '10px 0 6px 0';
-                speakerListContainer.appendChild(addDivider);
             }
-        } catch (err) {
-            console.log('Error enumerando dispositivos de audio:', err);
-        }
+        } catch (err) {}
     }
 
-    // ===== RENDEREAR MODAL DE PARLANTES =====
+    // ===== SCANNER 2: Web Bluetooth Directo con Filtro Estricto =====
+    async function scanWebBluetooth() {
+        if (!('bluetooth' in navigator)) return;
+
+        const namePrefixes = ['JBL', 'Sony', 'Bose', 'Marshall', 'Sound', 'Speaker', 'Audio', 'Harman', 'Anker', 'Soundcore', 'UE', 'Beats', 'LG', 'Samsung', 'Xiaomi', 'Tronsmart', 'Tribit'];
+        const nameFilters = namePrefixes.map(prefix => ({ namePrefix: prefix }));
+
+        try {
+            const device = await navigator.bluetooth.requestDevice({
+                filters: nameFilters,
+                optionalServices: ['device_information', 'generic_access']
+            });
+
+            let detectedName = device.name ? device.name.trim() : 'Parlante Bluetooth';
+            setDeviceConnected(detectedName, '✅ Conectado vía Web Bluetooth Directo');
+            toggleModal(modalOverlay, false);
+        } catch (err) {}
+    }
+
+    // ===== Renderizar Lista de Parlantes =====
     function renderSpeakerModal() {
         if (!speakerListContainer) return;
         speakerListContainer.innerHTML = '';
@@ -266,214 +215,96 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <button type="button" class="btn-connect-speaker" data-id="${spk.id}">🔗 Conectar</button>
             `;
-
-            const btnConnect = item.querySelector('.btn-connect-speaker');
-            btnConnect.addEventListener('click', () => {
+            item.querySelector('.btn-connect-speaker').addEventListener('click', () => {
                 setDeviceConnected(spk.name, `✅ Conectado vía Bluetooth • ${spk.type}`);
-                closeModal();
-                showHelp(`<strong>✅ ¡Conectado con éxito a "${spk.name}"!</strong><br>Ahora puedes controlar el volumen master, silenciado y ecualizador.`);
+                toggleModal(modalOverlay, false);
             });
-
             speakerListContainer.appendChild(item);
         });
 
-        // Intentar escaneo asertivo automático de audio del sistema
         scanAudioSystemDevices();
     }
 
-    function openModal() {
-        renderSpeakerModal();
-        if (modalOverlay) modalOverlay.hidden = false;
-    }
+    if (scanBtBtn) scanBtBtn.addEventListener('click', () => { renderSpeakerModal(); toggleModal(modalOverlay, true); });
+    if (modalCloseBtn) modalCloseBtn.addEventListener('click', () => toggleModal(modalOverlay, false));
+    if (modalOverlay) modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) toggleModal(modalOverlay, false); });
+    if (modalAudioScanBtn) modalAudioScanBtn.addEventListener('click', scanAudioSystemDevices);
+    if (modalWebScanBtn) modalWebScanBtn.addEventListener('click', scanWebBluetooth);
 
-    function closeModal() {
-        if (modalOverlay) modalOverlay.hidden = true;
-    }
-
-    if (scanBtBtn) scanBtBtn.addEventListener('click', openModal);
-    if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
-    if (modalOverlay) {
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) closeModal();
+    // ===== Modo Demo =====
+    if (demoModeBtn) {
+        demoModeBtn.addEventListener('click', () => {
+            const pick = knownSpeakers[Math.floor(Math.random() * knownSpeakers.length)];
+            setDeviceConnected(pick.name, `🎮 Modo Demo • ${pick.type}`);
         });
     }
 
-    if (modalAudioScanBtn) modalAudioScanBtn.addEventListener('click', scanAudioSystemDevices);
-
-    // ===== MOTOR 2: WEB BLUETOOTH DIRECTO CON FILTRADO ESTRICTO =====
-    async function scanWebBluetooth() {
-        if (!('bluetooth' in navigator)) {
-            showHelp(
-                '<strong>Tu navegador no soporta Web Bluetooth API.</strong><br>' +
-                '📱 En Android usa <strong>Google Chrome</strong>.<br>' +
-                '🍎 En iPhone/Safari usa el <strong>Scanner Asertivo de Salida de Audio</strong> del selector.'
-            );
-            return;
-        }
-
-        const namePrefixes = [
-            'JBL', 'Sony', 'Bose', 'Marshall', 'Sound', 'Speaker', 'Audio', 'Harman', 'Anker', 'Soundcore',
-            'UE', 'Ultimate', 'Beats', 'LG', 'Samsung', 'Xiaomi', 'Tronsmart', 'Tribit', 'Edifier',
-            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
-        ];
-        const nameFilters = namePrefixes.map(prefix => ({ namePrefix: prefix }));
-
-        try {
-            const device = await navigator.bluetooth.requestDevice({
-                filters: nameFilters,
-                optionalServices: ['battery_service', 'device_information', 'generic_access', '0000110b-0000-1000-8000-00805f9b34fb', '0000110e-0000-1000-8000-00805f9b34fb']
-            });
-
-            let detectedName = device.name ? device.name.trim() : '';
-
-            try {
-                if (device.gatt) {
-                    const server = await device.gatt.connect();
-                    try {
-                        const infoService = await server.getPrimaryService('device_information');
-                        const manufChar = await infoService.getCharacteristic('manufacturer_name_string');
-                        const manufVal = await manufChar.readValue();
-                        const manufStr = new TextDecoder('utf-8').decode(manufVal).trim();
-                        if (manufStr && !detectedName.includes(manufStr)) {
-                            detectedName = `${manufStr} ${detectedName}`;
-                        }
-                    } catch (gattErr) {}
-                }
-            } catch (e) {}
-
-            if (!detectedName) {
-                detectedName = 'Parlante Bluetooth Identificado';
-            }
-
-            setDeviceConnected(
-                detectedName,
-                '✅ Conectado vía Web Bluetooth • Nombre Identificado'
-            );
-            closeModal();
-            showHelp(`<strong>✅ ¡Conectado a "${detectedName}"!</strong><br>Dispositivo emparejado por su nombre real. Puedes presionar ✏️ para cambiar su nombre si lo deseas.`);
-        } catch (err) {
-            if (err.name !== 'NotFoundError') {
-                showHelp('<strong>Aviso de Permisos:</strong> Para conectar vía Bluetooth habilita los permisos del navegador.');
-            }
-        }
+    // ===== Controles de Audio =====
+    if (volumeSlider) {
+        volumeSlider.addEventListener('input', (e) => {
+            const val = e.target.value;
+            volPercentDisplay.textContent = `${val}%`;
+            isMuted = (val === '0' || Number(val) === 0);
+            if (btnMuteToggle) btnMuteToggle.textContent = isMuted ? '🔇' : '🔊';
+        });
     }
 
-    if (modalWebScanBtn) modalWebScanBtn.addEventListener('click', scanWebBluetooth);
+    if (btnMuteToggle) {
+        btnMuteToggle.addEventListener('click', () => {
+            isMuted = !isMuted;
+            if (isMuted) {
+                previousVolume = volumeSlider.value;
+                volumeSlider.value = 0;
+                volPercentDisplay.textContent = '0%';
+                btnMuteToggle.textContent = '🔇';
+            } else {
+                volumeSlider.value = previousVolume > 0 ? previousVolume : 65;
+                volPercentDisplay.textContent = `${volumeSlider.value}%`;
+                btnMuteToggle.textContent = '🔊';
+            }
+        });
+    }
 
-    // ===== MODO DEMO: Simular parlante aleatorio =====
-    demoModeBtn.addEventListener('click', () => {
-        const pick = knownSpeakers[Math.floor(Math.random() * knownSpeakers.length)];
-        setDeviceConnected(
-            pick.name,
-            `🎮 Modo Demo • ${pick.type}`
-        );
-
-        showHelp(
-            `<strong>🎮 Modo Demo activado</strong><br>` +
-            `Simulando conexión con <strong>"${pick.name}"</strong>.`
-        );
-    });
-
-    // ===== Volume Slider =====
-    volumeSlider.addEventListener('input', (e) => {
-        const val = e.target.value;
-        volPercentDisplay.textContent = `${val}%`;
-        if (val === '0' || Number(val) === 0) {
-            isMuted = true;
-            btnMuteToggle.textContent = '🔇';
-        } else {
+    if (btnMaxVol) {
+        btnMaxVol.addEventListener('click', () => {
+            volumeSlider.value = 100;
+            volPercentDisplay.textContent = '100%';
             isMuted = false;
-            btnMuteToggle.textContent = '🔊';
-        }
-    });
+            if (btnMuteToggle) btnMuteToggle.textContent = '🔊';
+        });
+    }
 
-    // ===== Mute Toggle =====
-    btnMuteToggle.addEventListener('click', () => {
-        isMuted = !isMuted;
-        if (isMuted) {
-            previousVolume = volumeSlider.value;
-            volumeSlider.value = 0;
-            volPercentDisplay.textContent = '0%';
-            btnMuteToggle.textContent = '🔇';
-        } else {
-            volumeSlider.value = previousVolume > 0 ? previousVolume : 65;
-            volPercentDisplay.textContent = `${volumeSlider.value}%`;
-            btnMuteToggle.textContent = '🔊';
-        }
-    });
+    if (audioFocusToggle) {
+        audioFocusToggle.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                interrupterBox.style.borderColor = '#FF007F';
+                interrupterBox.style.background = 'rgba(255, 0, 127, 0.2)';
+                interrupterDesc.textContent = '⚡ ACTIVO: Forzando Foco Exclusivo de Audio (Modo Dominante) en el parlante';
+            } else {
+                interrupterBox.style.borderColor = 'rgba(255, 0, 127, 0.3)';
+                interrupterBox.style.background = 'rgba(255, 0, 127, 0.08)';
+                interrupterDesc.textContent = 'Solicita foco exclusivo de audio para pausar transmisiones de otros dispositivos en el parlante';
+            }
+        });
+    }
 
-    // ===== Max Volume =====
-    btnMaxVol.addEventListener('click', () => {
-        volumeSlider.value = 100;
-        volPercentDisplay.textContent = '100%';
-        isMuted = false;
-        btnMuteToggle.textContent = '🔊';
-    });
+    if (bassSlider) bassSlider.addEventListener('input', (e) => { bassVal.textContent = `+${e.target.value} dB`; });
+    if (trebleSlider) trebleSlider.addEventListener('input', (e) => { trebleVal.textContent = `+${e.target.value} dB`; });
+    if (btnPlayPause) {
+        btnPlayPause.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            btnPlayPause.textContent = isPlaying ? '⏸️' : '▶️';
+        });
+    }
 
-    // ===== Audio Focus Interrupter Toggle =====
-    audioFocusToggle.addEventListener('change', (e) => {
-        if (e.target.checked) {
-            interrupterBox.style.borderColor = '#FF007F';
-            interrupterBox.style.background = 'rgba(255, 0, 127, 0.2)';
-            interrupterDesc.textContent = '⚡ ACTIVO: Forzando Foco Exclusivo de Audio (Modo Dominante) en el parlante';
-        } else {
-            interrupterBox.style.borderColor = 'rgba(255, 0, 127, 0.3)';
-            interrupterBox.style.background = 'rgba(255, 0, 127, 0.08)';
-            interrupterDesc.textContent = 'Solicita foco exclusivo de audio para pausar transmisiones de otros dispositivos en el parlante';
-        }
-    });
-
-    // ===== Equalizer Adjustments =====
-    bassSlider.addEventListener('input', (e) => {
-        bassVal.textContent = `+${e.target.value} dB`;
-    });
-
-    trebleSlider.addEventListener('input', (e) => {
-        trebleVal.textContent = `+${e.target.value} dB`;
-    });
-
-    // ===== Play/Pause Control =====
-    btnPlayPause.addEventListener('click', () => {
-        isPlaying = !isPlaying;
-        btnPlayPause.textContent = isPlaying ? '⏸️' : '▶️';
-    });
-
-    // ===== PWA INSTALL LOGIC WITH PERSISTENT REMOVAL =====
+    // ===== PWA Install Event Handler =====
     let deferredPrompt = null;
-
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-
-        const isInstalledLocally = localStorage.getItem('speaker_remote_installed') === 'true';
-        if (!isInstalledLocally && installBanner) {
-            installBanner.hidden = false;
-        }
+        const banner = document.getElementById('install-banner');
+        if (localStorage.getItem('speaker_remote_installed') !== 'true' && banner) banner.hidden = false;
     });
-
-    async function triggerInstall() {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const result = await deferredPrompt.userChoice;
-            if (result.outcome === 'accepted') {
-                localStorage.setItem('speaker_remote_installed', 'true');
-                applyInstallationVisibility();
-            }
-            deferredPrompt = null;
-        } else {
-            if (installGuide) installGuide.hidden = false;
-        }
-    }
-
-    if (pwaInstallBtn) pwaInstallBtn.addEventListener('click', triggerInstall);
-    if (installBannerBtn) installBannerBtn.addEventListener('click', triggerInstall);
-
-    if (installBannerClose) {
-        installBannerClose.addEventListener('click', () => {
-            if (installBanner) installBanner.hidden = true;
-        });
-    }
 
     window.addEventListener('appinstalled', () => {
         deferredPrompt = null;
@@ -481,8 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
         applyInstallationVisibility();
     });
 
-    // ===== Register Service Worker =====
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').catch(err => console.log('ServiceWorker error:', err));
+        navigator.serviceWorker.register('sw.js').catch(() => {});
     }
 });

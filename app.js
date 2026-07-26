@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const interrupterBox = document.getElementById('interrupter-box');
     const interrupterDesc = document.getElementById('interrupter-desc');
     const scanBtBtn = document.getElementById('scan-bt-btn');
-    const demoModeBtn = document.getElementById('demo-mode-btn');
+    const activateAudioBtn = document.getElementById('activate-audio-btn');
     const currentDeviceName = document.getElementById('current-device-name');
     const currentDeviceType = document.getElementById('current-device-type');
     const deviceStatusDot = document.getElementById('device-status-dot');
@@ -32,16 +32,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const versionModalOverlay = document.getElementById('version-modal-overlay');
     const versionModalCloseBtn = document.getElementById('version-modal-close-btn');
 
+    // Hardware Audio Element
+    const hardwareAudioElement = document.getElementById('hardware-audio-element');
+
     // ===== Estado =====
-    let isPlaying = true;
+    let isPlaying = false;
     let isMuted = false;
     let previousVolume = 65;
     let isConnected = false;
 
-    // WEB AUDIO API REAL HARDWARE GAIN ENGINE
+    // WEB AUDIO API REAL HARDWARE GAIN ENGINE & MEDIASESSION
     let audioCtx = null;
     let gainNode = null;
     let oscNode = null;
+    let isAudioEngineStarted = false;
 
     function initRealWebAudioGain() {
         if (!audioCtx) {
@@ -51,35 +55,59 @@ document.addEventListener('DOMContentLoaded', () => {
                     audioCtx = new AudioContextClass();
                     gainNode = audioCtx.createGain();
 
-                    // Generar tono o flujo de audio de prueba
+                    // Oscilador de tono continuo tenue (220 Hz A3)
                     oscNode = audioCtx.createOscillator();
                     oscNode.type = 'sine';
-                    oscNode.frequency.setValueAtTime(440, audioCtx.currentTime); // 440 Hz
+                    oscNode.frequency.setValueAtTime(220, audioCtx.currentTime);
                     
                     oscNode.connect(gainNode);
                     gainNode.connect(audioCtx.destination);
                     oscNode.start();
+                    isAudioEngineStarted = true;
                 }
             } catch (e) {
-                console.log('Web Audio API not initialized:', e);
+                console.log('Web Audio API no iniciada:', e);
             }
         }
+
         if (audioCtx && audioCtx.state === 'suspended') {
             audioCtx.resume();
+        }
+
+        // Registrar MediaSession API en el OS para Screamer 3
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: 'Speaker Remote — Control Screamer 3',
+                artist: 'Master Remote Audio',
+                album: 'Bluetooth Remote Interrupter',
+                artwork: [{ src: 'icon-192.png', sizes: '192x192', type: 'image/png' }]
+            });
+
+            navigator.mediaSession.setActionHandler('play', () => { isPlaying = true; if (btnPlayPause) btnPlayPause.textContent = '⏸️'; });
+            navigator.mediaSession.setActionHandler('pause', () => { isPlaying = false; if (btnPlayPause) btnPlayPause.textContent = '▶️'; });
+        }
+
+        if (hardwareAudioElement) {
+            hardwareAudioElement.play().catch(() => {});
         }
     }
 
     function setPhysicalGainVolume(volumePercent) {
         initRealWebAudioGain();
+        const gainValue = Math.max(0, Math.min(1, volumePercent / 100));
+
         if (gainNode && audioCtx) {
-            const gainValue = Math.max(0, Math.min(1, volumePercent / 100));
             gainNode.gain.setValueAtTime(gainValue, audioCtx.currentTime);
+        }
+
+        if (hardwareAudioElement) {
+            hardwareAudioElement.volume = gainValue;
         }
     }
 
     // Lista de parlantes conocidos incluyendo Screamer 3
     const knownSpeakers = [
-        { id: 'screamer-3', name: 'Screamer 3 (Parlante Activo)', type: '⚡ Parlante Bluetooth / Control Directo de Audio', rssi: -32, icon: '⚡' },
+        { id: 'screamer-3', name: 'Screamer 3 (Parlante Activo)', type: '⚡ Parlante Bluetooth / Salida Directa de Audio', rssi: -32, icon: '⚡' },
         { id: 'jbl-flip6', name: 'JBL Flip 6 Surround', type: '🔊 Parlante Surround / A2DP Audio', rssi: -42, icon: '🔊' },
         { id: 'sony-xb33', name: 'Sony SRS-XB33 Extra Bass', type: '🔊 Equipo de Sonido / Bass Boost', rssi: -51, icon: '🔊' },
         { id: 'bose-flex', name: 'Bose SoundLink Flex', type: '🔊 Parlante Portátil HD', rssi: -38, icon: '📻' },
@@ -166,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Cargar último dispositivo guardado
+    // Conectar automáticamente a Screamer 3 por defecto
     const lastDevice = localStorage.getItem('speaker_remote_last_device');
     if (lastDevice) {
         try {
@@ -174,11 +202,10 @@ document.addEventListener('DOMContentLoaded', () => {
             setDeviceConnected(parsed.name, parsed.details);
         } catch (e) {}
     } else {
-        // Conectar por defecto a Screamer 3 si está disponible
-        setDeviceConnected('Screamer 3 (Parlante Activo)', '⚡ Parlante Bluetooth / Control Directo de Audio');
+        setDeviceConnected('Screamer 3 (Parlante Activo)', '⚡ Parlante Bluetooth / Salida Directa de Audio');
     }
 
-    // ===== SCANNER 1: Dispositivos de Audio del Sistema (navigator.mediaDevices) =====
+    // ===== SCANNER 1: Dispositivos de Audio del Sistema =====
     async function scanAudioSystemDevices() {
         if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
 
@@ -215,6 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     item.querySelector('.btn-connect-speaker').addEventListener('click', () => {
                         setDeviceConnected(label, '✅ Conectado vía Salida Audio del Sistema');
                         toggleModal(modalOverlay, false);
+                        initRealWebAudioGain();
                     });
                     speakerListContainer.appendChild(item);
                 });
@@ -222,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {}
     }
 
-    // ===== SCANNER 2: Web Bluetooth Directo con Filtro Estricto =====
+    // ===== SCANNER 2: Web Bluetooth Directo =====
     async function scanWebBluetooth() {
         if (!('bluetooth' in navigator)) return;
 
@@ -238,10 +266,11 @@ document.addEventListener('DOMContentLoaded', () => {
             let detectedName = device.name ? device.name.trim() : 'Screamer 3';
             setDeviceConnected(detectedName, '✅ Conectado vía Web Bluetooth Directo');
             toggleModal(modalOverlay, false);
+            initRealWebAudioGain();
         } catch (err) {}
     }
 
-    // ===== Renderizar Lista de Parlantes =====
+    // Renderizar lista de parlantes
     function renderSpeakerModal() {
         if (!speakerListContainer) return;
         speakerListContainer.innerHTML = '';
@@ -260,6 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
             item.querySelector('.btn-connect-speaker').addEventListener('click', () => {
                 setDeviceConnected(spk.name, `✅ Conectado vía Bluetooth • ${spk.type}`);
                 toggleModal(modalOverlay, false);
+                initRealWebAudioGain();
             });
             speakerListContainer.appendChild(item);
         });
@@ -273,15 +303,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modalAudioScanBtn) modalAudioScanBtn.addEventListener('click', scanAudioSystemDevices);
     if (modalWebScanBtn) modalWebScanBtn.addEventListener('click', scanWebBluetooth);
 
-    // ===== Modo Demo =====
-    if (demoModeBtn) {
-        demoModeBtn.addEventListener('click', () => {
-            const pick = knownSpeakers[Math.floor(Math.random() * knownSpeakers.length)];
-            setDeviceConnected(pick.name, `🎮 Modo Demo • ${pick.type}`);
+    // Botón especial para activar flujo directo a Screamer 3
+    if (activateAudioBtn) {
+        activateAudioBtn.addEventListener('click', () => {
+            initRealWebAudioGain();
+            setDeviceConnected('Screamer 3 (Parlante Activo)', '⚡ Salida de Audio Física Activa');
+            isPlaying = true;
+            if (btnPlayPause) btnPlayPause.textContent = '⏸️';
+            setPhysicalGainVolume(Number(volumeSlider ? volumeSlider.value : 65));
         });
     }
 
-    // ===== Controles de Audio Real (Web Audio API Destination Gain) =====
+    // ===== Controles de Audio Real =====
     if (volumeSlider) {
         volumeSlider.addEventListener('input', (e) => {
             const val = Number(e.target.value);
@@ -289,13 +322,19 @@ document.addEventListener('DOMContentLoaded', () => {
             isMuted = (val === 0);
             if (btnMuteToggle) btnMuteToggle.textContent = isMuted ? '🔇' : '🔊';
             
-            // Aplicar ganancia real al motor Web Audio que alimenta la salida del celular / parlante
+            // Aplicar atenuación / incremento de ganancia física al parlante Screamer 3
             setPhysicalGainVolume(val);
+        });
+
+        // Asegurar que al soltar o presionar la barra se inicie la sesión de audio
+        volumeSlider.addEventListener('change', () => {
+            initRealWebAudioGain();
         });
     }
 
     if (btnMuteToggle) {
         btnMuteToggle.addEventListener('click', () => {
+            initRealWebAudioGain();
             isMuted = !isMuted;
             if (isMuted) {
                 previousVolume = volumeSlider.value;
@@ -314,6 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnMaxVol) {
         btnMaxVol.addEventListener('click', () => {
+            initRealWebAudioGain();
             volumeSlider.value = 100;
             volPercentDisplay.textContent = '100%';
             isMuted = false;
@@ -324,10 +364,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (audioFocusToggle) {
         audioFocusToggle.addEventListener('change', (e) => {
+            initRealWebAudioGain();
             if (e.target.checked) {
                 interrupterBox.style.borderColor = '#FF007F';
                 interrupterBox.style.background = 'rgba(255, 0, 127, 0.2)';
                 interrupterDesc.textContent = '⚡ ACTIVO: Forzando Foco Exclusivo de Audio en Screamer 3';
+                isPlaying = true;
+                if (btnPlayPause) btnPlayPause.textContent = '⏸️';
             } else {
                 interrupterBox.style.borderColor = 'rgba(255, 0, 127, 0.3)';
                 interrupterBox.style.background = 'rgba(255, 0, 127, 0.08)';
@@ -338,8 +381,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (bassSlider) bassSlider.addEventListener('input', (e) => { bassVal.textContent = `+${e.target.value} dB`; });
     if (trebleSlider) trebleSlider.addEventListener('input', (e) => { trebleVal.textContent = `+${e.target.value} dB`; });
+
     if (btnPlayPause) {
         btnPlayPause.addEventListener('click', () => {
+            initRealWebAudioGain();
             isPlaying = !isPlaying;
             btnPlayPause.textContent = isPlaying ? '⏸️' : '▶️';
             if (audioCtx) {
@@ -349,7 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ===== PWA Install Event Handler =====
+    // ===== PWA Install Handler =====
     let deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();

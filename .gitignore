@@ -5,3 +5,5 @@ app/build/
 *.iml
 .DS_Store
 *.log
+*.zip
+cmdline-tools.zip

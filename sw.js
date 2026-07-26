@@ -29,9 +29,19 @@ self.addEventListener('activate', (e) => {
     self.clients.claim();
 });
 
-// Fetch: cache-first con fallback a red
+// Fetch: cache-first con fallback a red y captura de errores sin conexión
 self.addEventListener('fetch', (e) => {
+    if (e.request.method !== 'GET') return;
     e.respondWith(
-        caches.match(e.request).then(response => response || fetch(e.request))
+        caches.match(e.request)
+            .then(cachedResponse => {
+                if (cachedResponse) return cachedResponse;
+                return fetch(e.request).catch(() => {
+                    if (e.request.mode === 'navigate') {
+                        return caches.match('./index.html') || caches.match('./');
+                    }
+                    return new Response('', { status: 408, statusText: 'Offline Request Timeout' });
+                });
+            })
     );
 });

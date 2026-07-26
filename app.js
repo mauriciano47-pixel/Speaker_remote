@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
     volumeSlider.addEventListener('input', (e) => {
         const val = e.target.value;
         volPercentDisplay.textContent = `${val}%`;
-        if (val == 0) {
+        if (val === '0' || Number(val) === 0) {
             isMuted = true;
             btnMuteToggle.textContent = '🔇';
         } else {

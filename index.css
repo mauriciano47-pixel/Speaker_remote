@@ -276,6 +276,29 @@ body {
         animation: pulse-dot 2s infinite;
     }
 
+    .device-name-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-rename-device {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #fff;
+        border-radius: 8px;
+        padding: 2px 6px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-rename-device:hover {
+        background: rgba(0, 206, 201, 0.3);
+        border-color: #00CEC9;
+        transform: scale(1.1);
+    }
+
     h3 {
         font-size: 16px;
         font-weight: 700;

@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentDeviceType = document.getElementById('current-device-type');
     const deviceStatusDot = document.getElementById('device-status-dot');
     const connectionPanel = document.getElementById('connection-panel');
+    const renameDeviceBtn = document.getElementById('rename-device-btn');
     const bassSlider = document.getElementById('bass-slider');
     const bassVal = document.getElementById('bass-val');
     const trebleSlider = document.getElementById('treble-slider');
@@ -61,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const isInstalledLocally = localStorage.getItem('speaker_remote_installed') === 'true';
 
         if (isStandalone || isInstalledLocally) {
-            // Ocultar permanentemente todos los anuncios de instalación
             if (installBanner) installBanner.style.display = 'none';
             if (installGuide) installGuide.style.display = 'none';
             if (pwaInstallBtn) pwaInstallBtn.style.display = 'none';
@@ -72,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Ejecutar verificación de instalación inmediata
     applyInstallationVisibility();
 
     // ===== Canvas Frequency Visualizer =====
@@ -132,8 +131,29 @@ document.addEventListener('DOMContentLoaded', () => {
         connectionPanel.classList.add('connected');
         scanBtBtn.innerHTML = `🔗 Conectado: ${name.length > 18 ? name.substring(0, 18) + '...' : name}`;
         
+        if (renameDeviceBtn) renameDeviceBtn.hidden = false;
+
         // Guardar dispositivo reciente en localStorage
         localStorage.setItem('speaker_remote_last_device', JSON.stringify({ name, details }));
+    }
+
+    // Renombrar dispositivo personalizado
+    if (renameDeviceBtn) {
+        renameDeviceBtn.addEventListener('click', () => {
+            if (!isConnected) return;
+            const currentName = currentDeviceName.textContent;
+            const newName = prompt('Escribe el nombre o etiqueta personalizada para tu parlante:', currentName);
+            if (newName && newName.trim() !== '') {
+                const cleanName = newName.trim();
+                currentDeviceName.textContent = cleanName;
+                scanBtBtn.innerHTML = `🔗 Conectado: ${cleanName.length > 18 ? cleanName.substring(0, 18) + '...' : cleanName}`;
+                localStorage.setItem('speaker_remote_last_device', JSON.stringify({
+                    name: cleanName,
+                    details: currentDeviceType.textContent
+                }));
+                showHelp(`<strong>✏️ Parlante renombrado a "${cleanName}"</strong>.`);
+            }
+        });
     }
 
     // Cargar último dispositivo conectado si existe
@@ -190,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ===== WEB BLUETOOTH DIRECTO CON IDENTIFICACIÓN DE NOMBRES =====
+    // ===== WEB BLUETOOTH DIRECTO CON FILTRADO ESTRICTO DE NOMBRES =====
     async function scanWebBluetooth() {
         if (!('bluetooth' in navigator)) {
             showHelp(
@@ -201,19 +221,49 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Filtros estrictos de prefijo para OBLIGAR al escáner del navegador a mostrar ÚNICAMENTE dispositivos que tengan un nombre visible y eliminar direcciones MAC crudas o beacons anónimos
+        const namePrefixes = [
+            'JBL', 'Sony', 'Bose', 'Marshall', 'Sound', 'Speaker', 'Audio', 'Harman', 'Anker', 'Soundcore',
+            'UE', 'Ultimate', 'Beats', 'LG', 'Samsung', 'Xiaomi', 'Tronsmart', 'Tribit', 'Edifier',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+        ];
+        const nameFilters = namePrefixes.map(prefix => ({ namePrefix: prefix }));
+
         try {
             const device = await navigator.bluetooth.requestDevice({
-                acceptAllDevices: true,
-                optionalServices: ['battery_service', 'device_information', '0000110b-0000-1000-8000-00805f9b34fb']
+                filters: nameFilters,
+                optionalServices: ['battery_service', 'device_information', 'generic_access', '0000110b-0000-1000-8000-00805f9b34fb', '0000110e-0000-1000-8000-00805f9b34fb']
             });
 
-            const deviceName = device.name || `Parlante Bluetooth (${device.id ? device.id.substring(0, 6) : 'Conectado'})`;
+            let detectedName = device.name ? device.name.trim() : '';
+
+            // Intentar consultar el chip GATT del dispositivo para extraer la marca y modelo oficiales (Device Information 0x180A)
+            try {
+                if (device.gatt) {
+                    const server = await device.gatt.connect();
+                    try {
+                        const infoService = await server.getPrimaryService('device_information');
+                        const manufChar = await infoService.getCharacteristic('manufacturer_name_string');
+                        const manufVal = await manufChar.readValue();
+                        const manufStr = new TextDecoder('utf-8').decode(manufVal).trim();
+                        if (manufStr && !detectedName.includes(manufStr)) {
+                            detectedName = `${manufStr} ${detectedName}`;
+                        }
+                    } catch (gattErr) {}
+                }
+            } catch (e) {}
+
+            if (!detectedName) {
+                detectedName = 'Parlante Bluetooth Identificado';
+            }
+
             setDeviceConnected(
-                deviceName,
-                `✅ Conectado vía Web Bluetooth Directo`
+                detectedName,
+                '✅ Conectado vía Web Bluetooth • Nombre Identificado'
             );
             closeModal();
-            showHelp(`<strong>✅ ¡Conectado a "${deviceName}"!</strong><br>Dispositivo emparejado correctamente.`);
+            showHelp(`<strong>✅ ¡Conectado a "${detectedName}"!</strong><br>Dispositivo emparejado por su nombre real. Puedes presionar ✏️ para cambiar su nombre si lo deseas.`);
         } catch (err) {
             if (err.name !== 'NotFoundError') {
                 showHelp('<strong>Aviso de Permisos:</strong> Para conectar vía Bluetooth habilita los permisos del navegador.');

@@ -7,3 +7,7 @@ app/build/
 *.log
 *.zip
 cmdline-tools.zip
+
+# V-GUARD Auto-Hardening
+.env
+scratch/

@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const trebleSlider = document.getElementById('treble-slider');
     const trebleVal = document.getElementById('treble-val');
     const btnPlayPause = document.getElementById('btn-play-pause');
+    const btnTestTone = document.getElementById('btn-test-tone');
 
     // Modales
     const modalOverlay = document.getElementById('speaker-modal-overlay');
@@ -32,6 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const versionModalOverlay = document.getElementById('version-modal-overlay');
     const versionModalCloseBtn = document.getElementById('version-modal-close-btn');
 
+    const footerLegalBtn = document.getElementById('footer-legal-btn');
+    const legalModalOverlay = document.getElementById('legal-modal-overlay');
+    const legalModalCloseBtn = document.getElementById('legal-modal-close-btn');
+
     // Hardware Audio Element
     const hardwareAudioElement = document.getElementById('hardware-audio-element');
 
@@ -40,12 +45,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let isMuted = false;
     let previousVolume = 65;
     let isConnected = false;
+    let isPlayingTestTone = false;
+    let testToneOscillators = [];
 
-    // WEB AUDIO API REAL HARDWARE GAIN ENGINE & MEDIASESSION
+    // WEB AUDIO API REAL HARDWARE GAIN & DSP ENGINE
     let audioCtx = null;
     let gainNode = null;
-    let oscNode = null;
+    let bassFilter = null;
+    let trebleFilter = null;
+    let analyserNode = null;
+    let dataArray = null;
+    let silentBufferNode = null;
     let isAudioEngineStarted = false;
+
+    // Silent carrier WAV (1 sample base64) para sesión continua de hardware sin errores
+    const SILENT_WAV = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
 
     function initRealWebAudioGain() {
         if (!audioCtx) {
@@ -55,14 +69,35 @@ document.addEventListener('DOMContentLoaded', () => {
                     audioCtx = new AudioContextClass();
                     gainNode = audioCtx.createGain();
 
-                    // Oscilador de tono continuo tenue (220 Hz A3)
-                    oscNode = audioCtx.createOscillator();
-                    oscNode.type = 'sine';
-                    oscNode.frequency.setValueAtTime(220, audioCtx.currentTime);
-                    
-                    oscNode.connect(gainNode);
+                    // Filtro DSP de Graves (lowshelf a 200 Hz)
+                    bassFilter = audioCtx.createBiquadFilter();
+                    bassFilter.type = 'lowshelf';
+                    bassFilter.frequency.setValueAtTime(200, audioCtx.currentTime);
+                    const initBass = Number(bassSlider ? bassSlider.value : 6);
+                    bassFilter.gain.setValueAtTime(initBass, audioCtx.currentTime);
+
+                    // Filtro DSP de Agudos (highshelf a 3000 Hz)
+                    trebleFilter = audioCtx.createBiquadFilter();
+                    trebleFilter.type = 'highshelf';
+                    trebleFilter.frequency.setValueAtTime(3000, audioCtx.currentTime);
+                    const initTreble = Number(trebleSlider ? trebleSlider.value : 3);
+                    trebleFilter.gain.setValueAtTime(initTreble, audioCtx.currentTime);
+
+                    // Analizador FFT para el visualizador reactivo real
+                    analyserNode = audioCtx.createAnalyser();
+                    analyserNode.fftSize = 64;
+                    const bufferLength = analyserNode.frequencyBinCount;
+                    dataArray = new Uint8Array(bufferLength);
+
+                    // Conexión física de la cadena DSP: Bass -> Treble -> Analyser -> Gain -> Destination
+                    bassFilter.connect(trebleFilter);
+                    trebleFilter.connect(analyserNode);
+                    analyserNode.connect(gainNode);
                     gainNode.connect(audioCtx.destination);
-                    oscNode.start();
+
+                    // Iniciar Portadora Silenciosa (evita el zumbido de 220Hz y retiene el focus)
+                    startSilentCarrier();
+
                     isAudioEngineStarted = true;
                 }
             } catch (e) {
@@ -74,21 +109,49 @@ document.addEventListener('DOMContentLoaded', () => {
             audioCtx.resume();
         }
 
-        // Registrar MediaSession API en el OS para Screamer 3
+        // Registrar MediaSession API en el OS para Screamer 3 / Parlantes
         if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
-                title: 'Speaker Remote — Control Screamer 3',
-                artist: 'Master Remote Audio',
-                album: 'Bluetooth Remote Interrupter',
-                artwork: [{ src: 'icon-192.png', sizes: '192x192', type: 'image/png' }]
+                title: 'Speaker Remote — Master Control',
+                artist: 'Control Maestro de Audio',
+                album: 'Speaker Remote Pro v1.6.0',
+                artwork: [
+                    { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
+                    { src: 'icon-512.png', sizes: '512x512', type: 'image/png' }
+                ]
             });
 
-            navigator.mediaSession.setActionHandler('play', () => { isPlaying = true; if (btnPlayPause) btnPlayPause.textContent = '⏸️'; });
-            navigator.mediaSession.setActionHandler('pause', () => { isPlaying = false; if (btnPlayPause) btnPlayPause.textContent = '▶️'; });
+            navigator.mediaSession.setActionHandler('play', () => {
+                isPlaying = true;
+                if (btnPlayPause) btnPlayPause.textContent = '⏸️';
+            });
+            navigator.mediaSession.setActionHandler('pause', () => {
+                isPlaying = false;
+                if (btnPlayPause) btnPlayPause.textContent = '▶️';
+            });
         }
 
         if (hardwareAudioElement) {
+            if (!hardwareAudioElement.src) {
+                hardwareAudioElement.src = SILENT_WAV;
+            }
             hardwareAudioElement.play().catch(() => {});
+        }
+    }
+
+    function startSilentCarrier() {
+        if (!audioCtx) return;
+        try {
+            // Buffer de silencio digital (1 segundo a sampleRate)
+            const buffer = audioCtx.createBuffer(1, audioCtx.sampleRate, audioCtx.sampleRate);
+            const source = audioCtx.createBufferSource();
+            source.buffer = buffer;
+            source.loop = true;
+            source.connect(bassFilter);
+            source.start();
+            silentBufferNode = source;
+        } catch (e) {
+            console.warn('Error en portadora de silencio:', e);
         }
     }
 
@@ -103,6 +166,64 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hardwareAudioElement) {
             hardwareAudioElement.volume = gainValue;
         }
+    }
+
+    // ===== Generador Armónico de Prueba (Test de Sonido) =====
+    function playHarmonicTestTone() {
+        initRealWebAudioGain();
+        if (!audioCtx) return;
+
+        if (isPlayingTestTone) {
+            stopHarmonicTestTone();
+            return;
+        }
+
+        isPlayingTestTone = true;
+        if (btnTestTone) {
+            btnTestTone.classList.add('active');
+            btnTestTone.textContent = '⏹️ Parar Test';
+        }
+
+        // Acorde armónico musical agradable (Do mayor: C4 261.6 Hz, Mi4 329.6 Hz, Sol4 392.0 Hz)
+        const chordNotes = [261.63, 329.63, 392.00];
+        testToneOscillators = chordNotes.map((freq, idx) => {
+            const osc = audioCtx.createOscillator();
+            const noteGain = audioCtx.createGain();
+            osc.type = 'triangle'; // Tono suave y libre de asperezas
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+            // Volumen controlado para no saturar
+            noteGain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+
+            osc.connect(noteGain);
+            noteGain.connect(bassFilter);
+            osc.start(audioCtx.currentTime + idx * 0.04);
+            return { osc, noteGain };
+        });
+
+        // Detener automáticamente a los 3.5 segundos
+        setTimeout(() => {
+            if (isPlayingTestTone) stopHarmonicTestTone();
+        }, 3500);
+    }
+
+    function stopHarmonicTestTone() {
+        isPlayingTestTone = false;
+        testToneOscillators.forEach(({ osc, noteGain }) => {
+            try {
+                noteGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.05);
+                setTimeout(() => osc.stop(), 80);
+            } catch (e) {}
+        });
+        testToneOscillators = [];
+        if (btnTestTone) {
+            btnTestTone.classList.remove('active');
+            btnTestTone.textContent = '🎵 Test Sonido';
+        }
+    }
+
+    if (btnTestTone) {
+        btnTestTone.addEventListener('click', playHarmonicTestTone);
     }
 
     // Lista de parlantes conocidos incluyendo Screamer 3
@@ -142,19 +263,41 @@ document.addEventListener('DOMContentLoaded', () => {
     if (versionModalCloseBtn) versionModalCloseBtn.addEventListener('click', () => toggleModal(versionModalOverlay, false));
     if (versionModalOverlay) versionModalOverlay.addEventListener('click', (e) => { if (e.target === versionModalOverlay) toggleModal(versionModalOverlay, false); });
 
-    // ===== Visualizador Canvas =====
+    if (footerLegalBtn) footerLegalBtn.addEventListener('click', () => toggleModal(legalModalOverlay, true));
+    if (legalModalCloseBtn) legalModalCloseBtn.addEventListener('click', () => toggleModal(legalModalOverlay, false));
+    if (legalModalOverlay) legalModalOverlay.addEventListener('click', (e) => { if (e.target === legalModalOverlay) toggleModal(legalModalOverlay, false); });
+
+    // ===== Visualizador Canvas Reactivo Real (FFT AnalyserNode) =====
     const canvas = document.getElementById('audio-visualizer');
     const ctx = canvas ? canvas.getContext('2d') : null;
 
     function drawVisualizer() {
         if (!ctx) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const bars = 40;
+        const bars = 32;
         const barWidth = (canvas.width / bars) - 2;
 
+        if (analyserNode && (isPlaying || isPlayingTestTone || isAudioEngineStarted)) {
+            analyserNode.getByteFrequencyData(dataArray);
+        }
+
         for (let i = 0; i < bars; i++) {
-            let height = isPlaying ? Math.random() * (canvas.height * 0.8) + 10 : 4;
-            if (isMuted) height = 2;
+            let height = 4;
+            if (isMuted) {
+                height = 2;
+            } else if (isPlayingTestTone && dataArray) {
+                const freqVal = dataArray[i] || 0;
+                height = Math.max(4, (freqVal / 255) * (canvas.height * 0.9));
+            } else if (isPlaying) {
+                const freqVal = dataArray ? (dataArray[i] || 0) : 0;
+                if (freqVal > 10) {
+                    height = Math.max(4, (freqVal / 255) * (canvas.height * 0.85));
+                } else {
+                    // Pulso suave rítmico mientras reproduce
+                    height = Math.max(4, Math.sin(Date.now() / 250 + i * 0.35) * 12 + 16);
+                }
+            }
+
             const x = i * (barWidth + 2);
             const y = canvas.height - height;
 
@@ -168,8 +311,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     drawVisualizer();
 
+    // ===== Enrutamiento de Hardware (setSinkId) =====
+    async function routeAudioSink(deviceId) {
+        if (hardwareAudioElement && typeof hardwareAudioElement.setSinkId === 'function') {
+            try {
+                await hardwareAudioElement.setSinkId(deviceId);
+            } catch (e) {
+                console.warn('setSinkId no permitido en audio tag:', e);
+            }
+        }
+        if (audioCtx && typeof audioCtx.setSinkId === 'function') {
+            try {
+                await audioCtx.setSinkId(deviceId);
+            } catch (e) {}
+        }
+    }
+
     // ===== Conexión de Dispositivo =====
-    function setDeviceConnected(name, details) {
+    function setDeviceConnected(name, details, deviceId = null) {
         isConnected = true;
         currentDeviceName.textContent = name;
         currentDeviceType.textContent = details;
@@ -178,7 +337,11 @@ document.addEventListener('DOMContentLoaded', () => {
         scanBtBtn.innerHTML = `🔗 Conectado: ${name.length > 18 ? name.substring(0, 18) + '...' : name}`;
         if (renameDeviceBtn) renameDeviceBtn.hidden = false;
 
-        localStorage.setItem('speaker_remote_last_device', JSON.stringify({ name, details }));
+        if (deviceId) {
+            routeAudioSink(deviceId);
+        }
+
+        localStorage.setItem('speaker_remote_last_device', JSON.stringify({ name, details, deviceId }));
     }
 
     if (renameDeviceBtn) {
@@ -199,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (lastDevice) {
         try {
             const parsed = JSON.parse(lastDevice);
-            setDeviceConnected(parsed.name, parsed.details);
+            setDeviceConnected(parsed.name, parsed.details, parsed.deviceId);
         } catch (e) {}
     } else {
         setDeviceConnected('Screamer 3 (Parlante Activo)', '⚡ Parlante Bluetooth / Salida Directa de Audio');
@@ -240,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button type="button" class="btn-connect-speaker">🔗 Seleccionar</button>
                     `;
                     item.querySelector('.btn-connect-speaker').addEventListener('click', () => {
-                        setDeviceConnected(label, '✅ Conectado vía Salida Audio del Sistema');
+                        setDeviceConnected(label, '✅ Conectado vía Salida Audio del Sistema', dev.deviceId);
                         toggleModal(modalOverlay, false);
                         initRealWebAudioGain();
                     });
@@ -321,12 +484,9 @@ document.addEventListener('DOMContentLoaded', () => {
             volPercentDisplay.textContent = `${val}%`;
             isMuted = (val === 0);
             if (btnMuteToggle) btnMuteToggle.textContent = isMuted ? '🔇' : '🔊';
-            
-            // Aplicar atenuación / incremento de ganancia física al parlante Screamer 3
             setPhysicalGainVolume(val);
         });
 
-        // Asegurar que al soltar o presionar la barra se inicie la sesión de audio
         volumeSlider.addEventListener('change', () => {
             initRealWebAudioGain();
         });
@@ -379,8 +539,64 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (bassSlider) bassSlider.addEventListener('input', (e) => { bassVal.textContent = `+${e.target.value} dB`; });
-    if (trebleSlider) trebleSlider.addEventListener('input', (e) => { trebleVal.textContent = `+${e.target.value} dB`; });
+    // ===== Filtros DSP Físicos (Graves y Agudos) =====
+    function updateDspFilters() {
+        initRealWebAudioGain();
+        if (bassFilter && audioCtx) {
+            const bVal = Number(bassSlider.value);
+            bassFilter.gain.setValueAtTime(bVal, audioCtx.currentTime);
+        }
+        if (trebleFilter && audioCtx) {
+            const tVal = Number(trebleSlider.value);
+            trebleFilter.gain.setValueAtTime(tVal, audioCtx.currentTime);
+        }
+    }
+
+    if (bassSlider) {
+        bassSlider.addEventListener('input', (e) => {
+            bassVal.textContent = `+${e.target.value} dB`;
+            updateDspFilters();
+        });
+    }
+
+    if (trebleSlider) {
+        trebleSlider.addEventListener('input', (e) => {
+            trebleVal.textContent = `+${e.target.value} dB`;
+            updateDspFilters();
+        });
+    }
+
+    // ===== Presets de Ecualizador DSP =====
+    const presetChips = document.querySelectorAll('.preset-chip');
+    const eqPresets = {
+        flat: { bass: 0, treble: 0 },
+        bass: { bass: 6, treble: 2 },
+        vocal: { bass: 1, treble: 4 },
+        club: { bass: 12, treble: 6 }
+    };
+
+    function applyPreset(presetKey) {
+        const p = eqPresets[presetKey];
+        if (!p) return;
+
+        if (bassSlider) {
+            bassSlider.value = p.bass;
+            bassVal.textContent = `+${p.bass} dB`;
+        }
+        if (trebleSlider) {
+            trebleSlider.value = p.treble;
+            trebleVal.textContent = `+${p.treble} dB`;
+        }
+        updateDspFilters();
+    }
+
+    presetChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            presetChips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            applyPreset(chip.dataset.preset);
+        });
+    });
 
     if (btnPlayPause) {
         btnPlayPause.addEventListener('click', () => {

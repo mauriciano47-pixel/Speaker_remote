@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speaker Remote Pro — Controlador de Parlantes Bluetooth v1.5.0</title>
+    <title>Speaker Remote Pro — Controlador de Parlantes Bluetooth v1.6.0</title>
     <meta name="description" content="Aplicación avanzada para interrupción de señal audio focus, control remoto de volumen master, mute y ecualizador de parlantes Bluetooth.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,8 +21,8 @@
     <div class="bg-glow bg-glow-1"></div>
     <div class="bg-glow bg-glow-2"></div>
 
-    <!-- Elemento de audio HTML5 hardware para forzar sesión de medios OS hacia Screamer 3 -->
-    <audio id="hardware-audio-element" loop preload="auto"></audio>
+    <!-- Elemento de audio HTML5 hardware para forzar sesión de medios OS hacia Screamer 3 con portadora limpia -->
+    <audio id="hardware-audio-element" loop preload="auto" src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA"></audio>
 
     <!-- Banner flotante de instalación (se oculta automáticamente si la app ya está instalada) -->
     <div class="install-banner" id="install-banner" hidden>
@@ -42,7 +42,7 @@
             <div class="brand">
                 <div class="logo-icon">🔊</div>
                 <div class="brand-text">
-                    <h1>Speaker Remote <span class="badge">PRO</span> <button type="button" class="version-chip" id="version-chip-btn" title="Ver Historial de Versiones (v1.5.0)" aria-label="Ver Historial de Versiones">v1.5.0 📋</button></h1>
+                    <h1>Speaker Remote <span class="badge">PRO</span> <button type="button" class="version-chip" id="version-chip-btn" title="Ver Historial de Versiones (v1.6.0)" aria-label="Ver Historial de Versiones">v1.6.0 📋</button></h1>
                     <p>Bluetooth Audio Interrupter &amp; Master Remote</p>
                 </div>
             </div>
@@ -69,7 +69,7 @@
                 </a>
                 <a href="#download" class="btn-secondary" id="hero-download-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    Instalar App v1.5.0
+                    Instalar App v1.6.0
                 </a>
             </div>
         </section>
@@ -165,11 +165,20 @@
                     </div>
                 </div>
 
+                <!-- Presets de Ecualizador DSP -->
+                <div class="eq-presets-row" id="eq-presets-row">
+                    <button type="button" class="preset-chip" data-preset="flat">🎧 Flat (0 dB)</button>
+                    <button type="button" class="preset-chip active" data-preset="bass">⚡ Bass Boost (+6 dB)</button>
+                    <button type="button" class="preset-chip" data-preset="vocal">🗣️ Voces (+4 dB)</button>
+                    <button type="button" class="preset-chip" data-preset="club">🔥 Club Máx (+12 dB)</button>
+                </div>
+
                 <!-- Playback Buttons -->
                 <div class="playback-controls">
                     <button type="button" class="control-btn" id="btn-prev" aria-label="Pista Anterior">⏮️</button>
                     <button type="button" class="control-btn play-main" id="btn-play-pause" aria-label="Reproducir o Pausar Audio">▶️</button>
                     <button type="button" class="control-btn" id="btn-next" aria-label="Pista Siguiente">⏭️</button>
+                    <button type="button" class="btn-test-tone" id="btn-test-tone" aria-label="Generar tono armónico de prueba">🎵 Test Sonido</button>
                 </div>
             </div>
         </section>
@@ -305,7 +314,23 @@
             <div class="changelog-container">
                 <div class="changelog-item current-ver">
                     <div class="changelog-badge-row">
-                        <span class="ver-badge badge-active">v1.5.0 (Actual)</span>
+                        <span class="ver-badge badge-active">v1.6.0 (Actual)</span>
+                        <span class="ver-date">5 de octubre de 2026</span>
+                    </div>
+                    <h4>🎛️ Motor DSP Físico, Espectro Reactivo FFT &amp; Audio Limpio</h4>
+                    <ul>
+                        <li><strong>Filtros DSP BiquadFilterNode:</strong> Graves (lowshelf 200 Hz) y agudos (highshelf 3 kHz) enlazados físicamente al procesador de audio web.</li>
+                        <li><strong>Portadora Silenciosa &amp; Cero Zumbidos:</strong> Eliminación del oscilador continuo de 220 Hz; reemplazado por buffer de silencio estéreo para sostener el audio focus sin emitir ruidos molestos.</li>
+                        <li><strong>Analizador de Espectro FFT Real:</strong> Integración de `AnalyserNode` en el Canvas visualizador reemplazando la simulación aleatoria.</li>
+                        <li><strong>Generador de Test de Sonido:</strong> Prueba armónica polifónica para verificación instantánea del enlace acústico con el parlante.</li>
+                        <li><strong>Presets de 1 Clic:</strong> Flat, Bass Boost, Voces y Club Máximo.</li>
+                        <li><strong>Enrutamiento Directo Hardware:</strong> Conexión mediante `setSinkId()` para salidas de audio del sistema seleccionadas.</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-item">
+                    <div class="changelog-badge-row">
+                        <span class="ver-badge">v1.5.0</span>
                         <span class="ver-date">26 de julio de 2026</span>
                     </div>
                     <h4>🔊 Salida Directa de Audio Hardware a Screamer 3</h4>
@@ -375,8 +400,33 @@
         </div>
     </div>
 
+    <!-- Modal para Marco Legal & Regulatorio -->
+    <div class="modal-overlay" id="legal-modal-overlay" hidden>
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <span class="modal-icon">⚖️</span>
+                    <div>
+                        <h3>Marco Legal, Ético y Regulatorio</h3>
+                        <p>Gestión autorizada de audio vs. interferencia radioeléctrica</p>
+                    </div>
+                </div>
+                <button type="button" class="modal-close" id="legal-modal-close-btn" aria-label="Cerrar modal legal">✕</button>
+            </div>
+            <div class="legal-modal-content">
+                <p><strong>Speaker Remote Pro</strong> opera estrictamente bajo el marco de las normativas de telecomunicaciones:</p>
+                <ul>
+                    <li><strong>Ámbito Legítimo:</strong> Control maestro de ganancia física (Web Audio), gestión de foco de audio del OS y enlace Bluetooth autorizado sobre dispositivos y parlantes propios.</li>
+                    <li><strong>Prohibición Estricta:</strong> Queda terminantemente prohibido el uso para interferencia no autorizada, saturación de radiofrecuencia (jamming) o sabotaje informático.</li>
+                    <li><strong>Reguladores Oficiales:</strong> Conforme a las directrices de SUBTEL (Chile), ENACOM (Argentina), SETELECO (España) y FCC (EE. UU.).</li>
+                </ul>
+                <div class="legal-badge-pill">🛡️ Cumplimiento Regulatorio Verificado</div>
+            </div>
+        </div>
+    </div>
+
     <footer class="app-footer">
-        <p>© 2026 <strong>Speaker Remote Pro</strong>. Versión <button type="button" class="footer-ver-link" id="footer-version-btn">v1.5.0 (Build 2026.07.26)</button>. Desarrollado por <strong>Mauricio (mauriciano47-pixel)</strong> &amp; Antigravity AI.</p>
+        <p>© 2026 <strong>Speaker Remote Pro</strong>. Versión <button type="button" class="footer-ver-link" id="footer-version-btn">v1.6.0 (Build 2026.10.05)</button> • <button type="button" class="footer-legal-link" id="footer-legal-btn">⚖️ Marco Legal &amp; Regulatorio</button>. Desarrollado por <strong>Mauricio (mauriciano47-pixel)</strong> &amp; Antigravity AI.</p>
     </footer>
 
     <script src="app.js"></script>

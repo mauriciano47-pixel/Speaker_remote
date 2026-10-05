@@ -1203,3 +1203,116 @@ input:checked + .slider:before {
     to { opacity: 1; transform: scale(1); }
 }
 
+/* Presets de Ecualizador */
+.eq-presets-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 14px;
+}
+
+.preset-chip {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-muted);
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-body);
+}
+
+.preset-chip:hover {
+    background: rgba(108, 92, 231, 0.2);
+    border-color: rgba(108, 92, 231, 0.5);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.preset-chip.active {
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.4), rgba(0, 206, 201, 0.3));
+    border-color: #00CEC9;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(0, 206, 201, 0.3);
+}
+
+/* Botón Test de Sonido */
+.btn-test-tone {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(0, 206, 201, 0.3);
+    color: #00CEC9;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-test-tone:hover {
+    background: rgba(0, 206, 201, 0.2);
+    box-shadow: 0 0 15px rgba(0, 206, 201, 0.4);
+    transform: scale(1.05);
+}
+
+.btn-test-tone.active {
+    background: #00CEC9;
+    color: #0D0D12;
+    box-shadow: 0 0 20px rgba(0, 206, 201, 0.6);
+}
+
+/* Enlace y Contenido Legal */
+.footer-legal-link {
+    background: none;
+    border: none;
+    color: #FF7675;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-left: 10px;
+    font-size: 12px;
+}
+
+.footer-legal-link:hover {
+    color: #fff;
+}
+
+.legal-modal-content {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.legal-modal-content ul {
+    margin: 0;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.legal-modal-content ul li strong {
+    color: #fff;
+}
+
+.legal-badge-pill {
+    align-self: center;
+    background: rgba(0, 206, 201, 0.15);
+    border: 1px solid rgba(0, 206, 201, 0.4);
+    color: #00CEC9;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-top: 6px;
+}
+

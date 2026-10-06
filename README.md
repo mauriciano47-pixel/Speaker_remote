@@ -13,7 +13,7 @@
 ## ⚡ Funciones Destacadas
 
 | Función | Descripción |
-|---|---|
+| --- | --- |
 | 🔊 **Volumen Master** | Control de 0-100% con slider en tiempo real y ganancia física Web Audio API |
 | 🎛️ **Ecualizador DSP Real** | Filtros activos `BiquadFilterNode` (Graves lowshelf 200 Hz y Agudos highshelf 3 kHz) |
 | 🎚️ **Presets de 1 Clic** | Perfiles acústicos instantáneos: Flat, Bass Boost, Voces y Club Máximo |
@@ -28,11 +28,13 @@
 
 ## 📲 Instalación Rápida
 
-### Opción A (Automática):
+### Opción A (Automática)
+
 1. Abre **Chrome** o **Edge** en tu teléfono o PC y visita la aplicación.
 2. Toca **"Instalar"** en el banner flotante inferior.
 
-### Opción B (Manual):
+### Opción B (Manual)
+
 1. Abre la página en **Google Chrome** o **Edge**.
 2. Toca el menú **⋮** (tres puntos) en la esquina superior derecha (o botón ⬆️ Compartir en Safari/iOS).
 3. Selecciona **"Instalar aplicación"** o **"Agregar a pantalla de inicio"**.
@@ -47,7 +49,7 @@
 
 ## 📁 Estructura del Proyecto
 
-```
+```text
 Speaker_remote/
 ├── index.html          → Interfaz principal, modales y componentes UI
 ├── index.css           → Diseño glassmorphism, responsive y dark OLED

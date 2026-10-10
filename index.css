@@ -1316,3 +1316,554 @@ input:checked + .slider:before {
     margin-top: 6px;
 }
 
+/* ================= PartySync P2P Multi-Speaker Mesh Styles ================= */
+.mesh-role-selector {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.mesh-role-tab {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: left;
+    color: var(--text-main);
+}
+
+.mesh-role-tab:hover {
+    background: rgba(108, 92, 231, 0.15);
+    border-color: rgba(108, 92, 231, 0.4);
+    transform: translateY(-2px);
+}
+
+.mesh-role-tab.active {
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.3), rgba(0, 206, 201, 0.2));
+    border-color: var(--accent);
+    box-shadow: 0 4px 20px rgba(0, 206, 201, 0.25);
+}
+
+.role-icon {
+    font-size: 28px;
+    background: rgba(255, 255, 255, 0.08);
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.role-info strong {
+    display: block;
+    font-size: 14px;
+    color: #fff;
+    margin-bottom: 2px;
+}
+
+.role-info span {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.mesh-zone {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 16px;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Room Share Card */
+.room-share-card {
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.15), rgba(255, 0, 127, 0.1));
+    border: 1px solid rgba(108, 92, 231, 0.4);
+    border-radius: 20px;
+    padding: 18px 20px;
+}
+
+.room-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.room-label {
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+.room-code {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: #fff;
+    margin-top: 4px;
+}
+
+.room-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-copy-room, .btn-new-room {
+    background: rgba(0, 206, 201, 0.15);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-copy-room:hover, .btn-new-room:hover {
+    background: var(--accent);
+    color: #0D0D12;
+    transform: scale(1.04);
+}
+
+.room-instruction {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 10px;
+    line-height: 1.4;
+}
+
+/* Source Selector Card */
+.source-selector-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    padding: 16px 18px;
+}
+
+.source-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.source-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.source-btn {
+    flex: 1;
+    min-width: 140px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.source-btn:hover {
+    background: rgba(108, 92, 231, 0.2);
+    color: #fff;
+}
+
+.source-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+.file-status-row {
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.btn-choose-file {
+    background: var(--primary);
+    border: none;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* Master Playback Card */
+.master-playback-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    padding: 16px 20px;
+}
+
+.timeline-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+#track-progress {
+    flex: 1;
+    height: 6px;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+    outline: none;
+}
+
+#track-progress::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--accent);
+}
+
+/* Satellite Join Card */
+.satellite-join-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    padding: 16px 20px;
+}
+
+.join-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+#satellite-room-input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 10px 14px;
+    color: #fff;
+    font-family: var(--font-heading);
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+#satellite-room-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.btn-join-room {
+    background: linear-gradient(135deg, var(--accent), var(--primary));
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-join-room:hover {
+    transform: scale(1.03);
+}
+
+.connection-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.status-indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00CEC9;
+    box-shadow: 0 0 8px #00CEC9;
+    display: inline-block;
+}
+
+/* Channel Assignment Card */
+.channel-assignment-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    padding: 16px 18px;
+}
+
+.channel-label {
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.channel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 8px;
+}
+
+.channel-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    padding: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s;
+}
+
+.channel-btn small {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+.channel-btn:hover {
+    background: rgba(108, 92, 231, 0.2);
+    color: #fff;
+}
+
+.channel-btn.active {
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.4), rgba(0, 206, 201, 0.3));
+    border-color: var(--accent);
+    color: #fff;
+    box-shadow: 0 0 12px rgba(0, 206, 201, 0.3);
+}
+
+/* Delay Calibrator Card */
+.delay-calibrator-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(0, 206, 201, 0.2);
+    border-radius: 18px;
+    padding: 16px 20px;
+}
+
+.delay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.delay-title span {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    display: block;
+}
+
+.delay-title small {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.delay-value-badge {
+    background: rgba(0, 206, 201, 0.15);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.delay-slider-wrapper input[type="range"] {
+    width: 100%;
+    height: 8px;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    outline: none;
+}
+
+.delay-slider-wrapper input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--accent);
+}
+
+.delay-quick-buttons {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-step {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-step:hover {
+    background: var(--accent);
+    color: #0D0D12;
+}
+
+/* Fleet Telemetry Card */
+.fleet-telemetry-card {
+    background: rgba(13, 13, 18, 0.9);
+    border: 1px solid rgba(108, 92, 231, 0.3);
+    border-radius: 18px;
+    padding: 16px 20px;
+    margin-top: 8px;
+}
+
+.fleet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.fleet-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.radar-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #00CEC9;
+    box-shadow: 0 0 10px #00CEC9;
+    animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.9); opacity: 0.7; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+.fleet-status-badge {
+    font-size: 11px;
+    color: #00CEC9;
+    font-weight: 700;
+}
+
+.fleet-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fleet-node {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.master-node {
+    border-color: rgba(108, 92, 231, 0.4);
+    background: rgba(108, 92, 231, 0.08);
+}
+
+.node-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.node-badge {
+    background: var(--primary);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 3px 6px;
+    border-radius: 6px;
+}
+
+.satellite-badge {
+    background: var(--accent);
+    color: #0D0D12;
+}
+
+.node-name {
+    font-size: 13px;
+    display: block;
+    color: #fff;
+}
+
+.node-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.node-ping {
+    font-size: 11px;
+    color: #00CEC9;
+    font-weight: 700;
+}
+
+@media (max-width: 600px) {
+    .mesh-role-selector {
+        flex-direction: column;
+    }
+    .room-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .source-buttons {
+        flex-direction: column;
+    }
+}
+

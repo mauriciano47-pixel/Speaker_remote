@@ -1,4 +1,4 @@
-const CACHE_NAME = 'speaker-remote-v1.6.0';
+const CACHE_NAME = 'partysync-v2.0.0';
 const ASSETS = [
     './',
     './index.html',

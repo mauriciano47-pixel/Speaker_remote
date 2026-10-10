@@ -1,8 +1,8 @@
-# 🔊 Speaker Remote Pro
+# 📻⚡ PartySync Pro
 
-**Controlador y Gestor de Parlantes Bluetooth** — Interrupción de señal audio focus, control remoto de volumen master, ecualizador DSP físico, mute instantáneo y enrutamiento de hardware.
+**Sincronizador y Cluster Multi-Parlante Bluetooth P2P** — Transmisión distribuida en fase, escenario estéreo multicanal (L / R) y compensador de latencia acústica milimétrica.
 
-[![Versión](https://img.shields.io/badge/versión-v1.6.0-blue)](https://github.com/mauriciano47-pixel/Speaker_remote)
+[![Versión](https://img.shields.io/badge/versión-v2.0.0--mesh-blue)](https://github.com/mauriciano47-pixel/Speaker_remote)
 [![GitHub Pages](https://img.shields.io/badge/demo-live-brightgreen)](https://mauriciano47-pixel.github.io/Speaker_remote/)
 [![PWA](https://img.shields.io/badge/PWA-instalable-purple)](https://mauriciano47-pixel.github.io/Speaker_remote/)
 
@@ -10,21 +10,29 @@
 
 👉 **[https://mauriciano47-pixel.github.io/Speaker_remote/](https://mauriciano47-pixel.github.io/Speaker_remote/)**
 
-## ⚡ Funciones Destacadas
+## 🎯 El Problema de Mercado que Resuelve
+
+El estándar Bluetooth A2DP es estrictamente punto a punto: **un teléfono solo puede transmitir audio a un único parlante a la vez**. Si estás en una reunión, fiesta o paseo al aire libre y tienes dos parlantes de marcas distintas (por ejemplo, un Screamer 3 y un JBL o Sony), no existe forma nativa de hacerlos sonar juntos sin comprar cables divisores analógicos o equipos de marca idéntica.
+
+**PartySync Pro** resuelve este dolor convirtiendo la web en una red de transmisión P2P:
+1. **Dispositivo 1 (Host DJ):** Se conecta a su parlante (ej. Screamer 3) y crea una sala de fiesta (`SYNC-XXXX`).
+2. **Dispositivos Satélites:** Se conectan cada uno a su parlante (ej. JBL Flip, Sony, Bose) y se unen a la sala desde el navegador.
+3. **Reproducción en Fase & Calibración de Eco:** Toda la flota reproduce exactamente la misma música al unísono, con compensación de retraso milimétrica para eliminar el eco acústico.
+
+## ⚡ Funciones Principales
 
 | Función | Descripción |
 | --- | --- |
-| 🔊 **Volumen Master** | Control de 0-100% con slider en tiempo real y ganancia física Web Audio API |
-| 🎛️ **Ecualizador DSP Real** | Filtros activos `BiquadFilterNode` (Graves lowshelf 200 Hz y Agudos highshelf 3 kHz) |
-| 🎚️ **Presets de 1 Clic** | Perfiles acústicos instantáneos: Flat, Bass Boost, Voces y Club Máximo |
-| 🎵 **Test Armónico de Sonido** | Acorde polifónico cálido para verificación acústica inmediata del enlace |
-| 📊 **Espectro Reactivo FFT** | Visualizador Canvas impulsado en tiempo real por `AnalyserNode` |
-| ⚡ **Audio Focus Takeover** | Sostén de sesión de medios con portadora limpia (sin zumbidos continuos) |
-| 🔇 **Mute Ultra-Rápido** | Silenciado físico con un toque preservando el emparejamiento Bluetooth |
-| 🎯 **Enrutamiento por Hardware** | Asignación directa de salida de audio mediante `setSinkId()` |
-| 🔍 **Scanner Asertivo** | Audio System API (`enumerateDevices`) + Web Bluetooth directo |
-| ⚖️ **Marco Legal & Regulatorio** | Documentación y blindaje conforme a SUBTEL, ENACOM, SETELECO y FCC |
-| 📲 **PWA Network-First** | Cache de alta velocidad, soporte offline y supresión automática de banners |
+| 👑 **Modo Host DJ** | Crea la sala, transmite a toda la flota y controla la reproducción |
+| 📻 **Modo Satélite** | Se une a la sala del Host y reproduce en su parlante Bluetooth local |
+| ⏱️ **Compensador de Latencia** | Nodo `DelayNode` (0 - 400 ms) para alinear al milisegundo parlantes con diferentes buffers |
+| 🎧 **Separación Estéreo (L / R)** | Convierte dos parlantes portátiles en un par estéreo real (Canal Izquierdo y Derecho) |
+| 🎵 **Fiesta Groove (Sintetizador)** | Generador de ritmos electrónicos a 128 BPM en tiempo real sin requerir archivos |
+| 📂 **Cargador de Audio Local** | Transmite y decodifica cualquier archivo MP3, WAV o FLAC del usuario |
+| 🎙️ **Megáfono en Vivo** | Transmite la voz del micrófono del Host a todos los parlantes del cluster |
+| 📊 **Espectrograma Reactivo FFT** | Visualizador de frecuencias en tiempo real mediante `AnalyserNode` |
+| 🎛️ **Ecualizador DSP Físico** | Filtros `BiquadFilterNode` activos para graves y agudos en cada nodo |
+| 📡 **Telemetría de la Flota** | Monitor en vivo de parlantes conectados, estado de fase y retraso |
 
 ## 📲 Instalación Rápida
 
@@ -41,31 +49,31 @@
 
 ## 🛠️ Stack Tecnológico
 
-- **Frontend Web / PWA:** HTML5, CSS3 Glassmorphism, JavaScript Moderno (ES6+).
-- **Procesamiento de Audio:** Web Audio API (`AudioContext`, `GainNode`, `BiquadFilterNode`, `AnalyserNode`).
-- **Control de Sistema:** MediaSession API, MediaDevices API (`enumerateDevices`, `setSinkId`).
-- **Nativo Android:** Kotlin, Jetpack Compose, `AudioManager`, `AudioFocusRequest` (`AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE`).
-- **PWA:** Service Worker Network-First v1.6.0, Web App Manifest.
+- **Frontend Web / PWA:** HTML5, CSS3 Glassmorphism Dark OLED, JavaScript Moderno (ES6+).
+- **Procesamiento de Audio Distribuido:** Web Audio API (`AudioContext`, `DelayNode`, `StereoPannerNode`, `BiquadFilterNode`, `AnalyserNode`, `AudioBufferSourceNode`).
+- **Sincronización P2P:** BroadcastChannel API + WebRTC DataChannels con servidor STUN público.
+- **Control de Sistema:** MediaSession API, MediaDevices API (`enumerateDevices`, `getUserMedia`).
+- **PWA:** Service Worker Network-First v2.0.0, Web App Manifest.
 
 ## 📁 Estructura del Proyecto
 
 ```text
 Speaker_remote/
-├── index.html          → Interfaz principal, modales y componentes UI
-├── index.css           → Diseño glassmorphism, responsive y dark OLED
-├── app.js              → Motor de audio DSP, Web Audio Gain, Bluetooth y PWA
-├── sw.js               → Service Worker v1.6.0 (Network-First)
+├── index.html          → Interfaz de PartySync, selector de roles, cluster y telemetría
+├── index.css           → Estilos glassmorphism, roles Host/Satélite y calibradores
+├── app.js              → Motor P2P Mesh, DelayNode, StereoPanner, sintetizador y telemetría
+├── sw.js               → Service Worker v2.0.0 (Network-First)
 ├── manifest.json       → Manifest PWA (Android / iOS / Desktop)
 ├── icon-192.png        → Ícono PWA 192x192
 ├── icon-512.png        → Ícono PWA 512x512
-├── VERSION.txt         → Versión actual (v1.6.0)
+├── VERSION.txt         → Versión actual (v2.0.0)
 ├── ADVERTENCIA_LEGAL_Y_REGULATORIA.md → Marco legal y regulatorio
-├── app/                → Módulo nativo Android (Jetpack Compose / Kotlin)
+├── app/                → Módulo complementario Android
 └── README.md           → Documentación técnica del proyecto
 ```
 
-## 👤 Créditos
+## 👤 Créditos y Titularidad
 
-Desarrollado por **Mauricio (mauriciano47-pixel)** & **Antigravity AI**.
+Desarrollado por **Mauricio Uribe Maldonado (mauriciano47-pixel)** & **Antigravity AI**.
 
-© 2026 Speaker Remote Pro — Todos los derechos reservados.
+© 2026 PartySync Pro — Todos los derechos reservados.

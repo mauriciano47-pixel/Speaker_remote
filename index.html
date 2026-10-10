@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speaker Remote Pro — Controlador de Parlantes Bluetooth v1.6.0</title>
-    <meta name="description" content="Aplicación avanzada para interrupción de señal audio focus, control remoto de volumen master, mute y ecualizador de parlantes Bluetooth.">
+    <title>PartySync Pro v2.0.0 — Sincronizador Multi-Parlante Bluetooth P2P</title>
+    <meta name="description" content="Sincroniza múltiples parlantes Bluetooth de marcas distintas en un cluster estéreo o multihabitación sin cables con compensación de latencia milimétrica.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -15,22 +15,22 @@
     <meta name="theme-color" content="#0D0D12">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Speaker Remote">
+    <meta name="apple-mobile-web-app-title" content="PartySync Pro">
 </head>
 <body>
     <div class="bg-glow bg-glow-1"></div>
     <div class="bg-glow bg-glow-2"></div>
 
-    <!-- Elemento de audio HTML5 hardware para forzar sesión de medios OS hacia Screamer 3 con portadora limpia -->
+    <!-- Elemento de audio HTML5 hardware para sesión continua de OS -->
     <audio id="hardware-audio-element" loop preload="auto" src="data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA"></audio>
 
-    <!-- Banner flotante de instalación (se oculta automáticamente si la app ya está instalada) -->
+    <!-- Banner flotante de instalación PWA -->
     <div class="install-banner" id="install-banner" hidden>
         <div class="install-banner-content">
             <div class="install-banner-icon">📲</div>
             <div class="install-banner-text">
-                <strong>¡Instala Speaker Remote!</strong>
-                <span>Úsala como app independiente en tu celular</span>
+                <strong>¡Instala PartySync Pro!</strong>
+                <span>Úsala como app de sincronización en tu celular</span>
             </div>
             <button type="button" class="install-banner-btn" id="install-banner-btn" aria-label="Instalar la aplicación ahora">Instalar</button>
             <button type="button" class="install-banner-close" id="install-banner-close" aria-label="Cerrar aviso de instalación">✕</button>
@@ -40,15 +40,15 @@
     <header class="app-header">
         <div class="header-container">
             <div class="brand">
-                <div class="logo-icon">🔊</div>
+                <div class="logo-icon">📻⚡</div>
                 <div class="brand-text">
-                    <h1>Speaker Remote <span class="badge">PRO</span> <button type="button" class="version-chip" id="version-chip-btn" title="Ver Historial de Versiones (v1.6.0)" aria-label="Ver Historial de Versiones">v1.6.0 📋</button></h1>
-                    <p>Bluetooth Audio Interrupter &amp; Master Remote</p>
+                    <h1>PartySync <span class="badge">PRO</span> <button type="button" class="version-chip" id="version-chip-btn" title="Ver Historial de Versiones (v2.0.0)" aria-label="Ver Historial de Versiones">v2.0.0 MESH 📋</button></h1>
+                    <p>Distributed Multi-Speaker Mesh &amp; Stereo Cluster</p>
                 </div>
             </div>
             <nav class="nav-links" id="nav-links">
-                <a href="#interactive-demo" class="nav-item">Controlador</a>
-                <a href="#features" class="nav-item">Funciones</a>
+                <a href="#interactive-demo" class="nav-item">Cluster MESH</a>
+                <a href="#features" class="nav-item">Ventajas</a>
                 <a href="#download" class="btn-glow" id="nav-download-btn">Instalar App</a>
             </nav>
         </div>
@@ -57,101 +57,211 @@
     <main class="main-content">
         <!-- Hero Section -->
         <section class="hero-section">
-            <div class="hero-badge">⚡ Interrupción de Señal &amp; Control de Audio Focus</div>
-            <h2 class="hero-title">Toma el control absoluto de cualquier <span class="gradient-text">Parlante Bluetooth</span></h2>
+            <div class="hero-badge">⚡ Red P2P Multi-Parlante sin Cables</div>
+            <h2 class="hero-title">Une múltiples <span class="gradient-text">Parlantes Bluetooth</span> en un solo sistema estéreo</h2>
             <p class="hero-description">
-                Gestiona el volumen master, ejecuta la interrupción de señal audio focus para pausar transmisiones ajenas, fuerza silenciado instantáneo (Mute) y ajusta graves en tiempo real.
+                ¿Tienes un Screamer 3 y tu amigo un JBL o Sony? Conecta cada teléfono a su parlante, entra a la misma sala PartySync y haz sonar la misma música con sincronización de milisegundos, separación de canales (Izquierda / Derecha) y compensación acústica de eco.
             </p>
             <div class="hero-actions">
                 <a href="#interactive-demo" class="btn-primary" id="hero-demo-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                    Abrir Controlador de Audio
+                    Abrir Cluster PartySync
                 </a>
                 <a href="#download" class="btn-secondary" id="hero-download-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    Instalar App v1.6.0
+                    Instalar PWA v2.0.0
                 </a>
             </div>
         </section>
 
-        <!-- Interactive Remote Controller Web App -->
+        <!-- Interactive Remote Controller & PartySync Web App -->
         <section id="interactive-demo" class="demo-section">
             <div class="section-header">
-                <h2>Controlador de Parlante en Vivo</h2>
-                <p>Scanner Asertivo por Audio System API &amp; Web Bluetooth con identificación de nombre real</p>
+                <h2>Panel de Control Multi-Parlante</h2>
+                <p>Transmisor P2P • Separación Estéreo L/R • Compensador de Latencia Acústica</p>
             </div>
 
             <div class="remote-app-card">
-                <!-- Conexión de dispositivo — Selector de Parlantes Claro -->
+                <!-- Selector de Rol: Host DJ vs Satélite Receptor -->
+                <div class="mesh-role-selector">
+                    <button type="button" class="mesh-role-tab active" id="tab-host-role" aria-label="Modo Host DJ Emisor">
+                        <span class="role-icon">👑</span>
+                        <div class="role-info">
+                            <strong>Host DJ (Emisor Maestro)</strong>
+                            <span>Transmite la música a toda la flota</span>
+                        </div>
+                    </button>
+                    <button type="button" class="mesh-role-tab" id="tab-satellite-role" aria-label="Modo Satélite Receptor">
+                        <span class="role-icon">📻</span>
+                        <div class="role-info">
+                            <strong>Satélite (Receptor Parlante)</strong>
+                            <span>Se une a una sala y reproduce en su parlante</span>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Tarjeta de Conexión Bluetooth Local de este dispositivo -->
                 <div class="connection-panel" id="connection-panel">
                     <div class="device-info">
                         <span class="status-dot" id="device-status-dot"></span>
                         <div>
                             <div class="device-name-row">
-                                <h3 id="current-device-name">Sin dispositivo conectado</h3>
-                                <button type="button" class="btn-rename-device" id="rename-device-btn" title="Renombrar o agregar etiqueta personalizada al parlante" aria-label="Renombrar parlante" hidden>✏️</button>
+                                <h3 id="current-device-name">Screamer 3 (Parlante Activo)</h3>
+                                <button type="button" class="btn-rename-device" id="rename-device-btn" title="Renombrar parlante de este nodo" aria-label="Renombrar parlante">✏️</button>
                             </div>
-                            <span class="device-type" id="current-device-type">Toca "Escanear Parlantes" para detectar dispositivos con nombre real</span>
+                            <span class="device-type" id="current-device-type">⚡ Salida Directa de Audio / Bluetooth Local</span>
                         </div>
                     </div>
                     <div class="connection-buttons">
-                        <button type="button" class="btn-scan" id="scan-bt-btn" aria-label="Abrir scanner asertivo de parlantes Bluetooth">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5l11 11L12 23V1l5.5 5.5-11 11"/></svg>
-                            🔍 Escanear Parlantes
-                        </button>
-                        <button type="button" class="btn-demo" id="activate-audio-btn" aria-label="Activar Salida Directa a Screamer 3">
-                            🔊 Activar Salida a Screamer 3
+                        <button type="button" class="btn-scan" id="scan-bt-btn" aria-label="Escanear y vincular parlante local">
+                            🔍 Escanear Parlante
                         </button>
                     </div>
                 </div>
 
-                <!-- Mensaje de ayuda para Bluetooth -->
-                <div class="bt-help-box" id="bt-help-box" hidden>
-                    <div class="bt-help-icon">ℹ️</div>
-                    <div class="bt-help-content">
-                        <p id="bt-help-text"></p>
+                <!-- ================= ZONA HOST DJ ================= -->
+                <div class="mesh-zone" id="zone-host">
+                    <!-- Tarjeta de Sala Host -->
+                    <div class="room-share-card">
+                        <div class="room-header">
+                            <div>
+                                <span class="room-label">SALA ACTIVA DEL CLUSTER:</span>
+                                <h3 class="room-code" id="display-room-code">SYNC-4821</h3>
+                            </div>
+                            <div class="room-actions">
+                                <button type="button" class="btn-copy-room" id="btn-copy-room" aria-label="Copiar enlace de invitación">
+                                    🔗 Copiar Enlace
+                                </button>
+                                <button type="button" class="btn-new-room" id="btn-new-room" aria-label="Generar nueva sala">
+                                    🔄 Nueva
+                                </button>
+                            </div>
+                        </div>
+                        <p class="room-instruction">
+                            Pide a tus amigos que abran PartySync y escriban este código para sonar sus parlantes al mismo tiempo.
+                        </p>
                     </div>
-                    <button type="button" class="bt-help-close" id="bt-help-close" aria-label="Cerrar mensaje de ayuda">✕</button>
-                </div>
 
-                <!-- Signal Interrupter Card -->
-                <div class="interrupter-banner" id="interrupter-box">
-                    <div class="banner-left">
-                        <div class="warning-icon">⚡</div>
-                        <div>
-                            <h4>Interrupción de Señal Audio Focus (Modo Dominante)</h4>
-                            <p id="interrupter-desc">Solicita foco exclusivo de audio para pausar transmisiones de otros dispositivos en el parlante</p>
+                    <!-- Selector de Fuente de Sonido -->
+                    <div class="source-selector-card">
+                        <span class="source-label">FUENTE DE AUDIO DEL TRANSMISOR:</span>
+                        <div class="source-buttons">
+                            <button type="button" class="source-btn active" id="src-synth" data-source="synth">
+                                🎵 Fiesta Groove (128 BPM)
+                            </button>
+                            <button type="button" class="source-btn" id="src-file" data-source="file">
+                                📂 Cargar MP3 / Audio
+                            </button>
+                            <button type="button" class="source-btn" id="src-mic" data-source="mic">
+                                🎙️ Megáfono / Micrófono
+                            </button>
+                        </div>
+                        <input type="file" id="audio-file-input" accept="audio/*" style="display: none;">
+                        <div class="file-status-row" id="file-status-row" hidden>
+                            <span id="loaded-file-name">Ningún archivo cargado</span>
+                            <button type="button" class="btn-choose-file" id="btn-choose-file">Seleccionar archivo</button>
                         </div>
                     </div>
-                    <label class="switch" for="audio-focus-toggle">
-                        <input type="checkbox" id="audio-focus-toggle" aria-label="Activar Interrupción de Señal Audio Focus">
-                        <span class="slider round"></span>
-                    </label>
+
+                    <!-- Controles de Reproducción Maestro -->
+                    <div class="master-playback-card">
+                        <div class="timeline-row">
+                            <span id="time-current">0:00</span>
+                            <input type="range" id="track-progress" min="0" max="100" value="0" aria-label="Progreso de reproducción">
+                            <span id="time-total">2:30</span>
+                        </div>
+                        <div class="playback-controls">
+                            <button type="button" class="control-btn" id="btn-prev" aria-label="Pista Anterior">⏮️</button>
+                            <button type="button" class="control-btn play-main" id="btn-play-pause" aria-label="Reproducir o Pausar en Toda la Flota">▶️</button>
+                            <button type="button" class="control-btn" id="btn-next" aria-label="Pista Siguiente">⏭️</button>
+                            <button type="button" class="btn-test-tone" id="btn-test-tone" aria-label="Test Armónico de Sincronía">🎵 Test de Fase</button>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Canvas Visualizer -->
+                <!-- ================= ZONA SATÉLITE RECEPTOR ================= -->
+                <div class="mesh-zone" id="zone-satellite" hidden>
+                    <!-- Formulario de Ingreso a Sala -->
+                    <div class="satellite-join-card">
+                        <span class="room-label">CONECTARSE A SALA HOST:</span>
+                        <div class="join-row">
+                            <input type="text" id="satellite-room-input" placeholder="Ej: SYNC-4821" maxlength="12" aria-label="Ingresa código de sala">
+                            <button type="button" class="btn-join-room" id="btn-join-room">🔗 Conectarse</button>
+                        </div>
+                        <div class="connection-status-pill" id="sat-status-pill">
+                            <span class="status-indicator-dot"></span>
+                            <span id="sat-status-text">Listo para unirse a la sala</span>
+                        </div>
+                    </div>
+
+                    <!-- Asignación de Canal Espacial del Parlante -->
+                    <div class="channel-assignment-card">
+                        <span class="channel-label">ROL DE ESTE PARLANTE EN EL ESCENARIO:</span>
+                        <div class="channel-grid">
+                            <button type="button" class="channel-btn active" data-channel="stereo">
+                                🎧 Estéreo Completo
+                                <small>L + R simultáneo</small>
+                            </button>
+                            <button type="button" class="channel-btn" data-channel="left">
+                                ⬅️ Canal Izquierdo (L)
+                                <small>Parlante izquierdo</small>
+                            </button>
+                            <button type="button" class="channel-btn" data-channel="right">
+                                ➡️ Canal Derecho (R)
+                                <small>Parlante derecho</small>
+                            </button>
+                            <button type="button" class="channel-btn" data-channel="mono">
+                                🔊 Subwoofer / Mono
+                                <small>Poder de graves</small>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Calibrador de Latencia Acústica Milimétrica -->
+                    <div class="delay-calibrator-card">
+                        <div class="delay-header">
+                            <div class="delay-title">
+                                <span>⚡ Compensación de Latencia Acústica</span>
+                                <small>Alinea el desfase de buffer entre parlantes para eliminar el eco</small>
+                            </div>
+                            <span class="delay-value-badge" id="delay-val-badge">0 ms</span>
+                        </div>
+                        <div class="delay-slider-wrapper">
+                            <input type="range" id="delay-slider" min="0" max="400" value="0" step="5" aria-label="Ajuste de retraso en milisegundos">
+                        </div>
+                        <div class="delay-quick-buttons">
+                            <button type="button" class="btn-step" data-step="-25">-25 ms</button>
+                            <button type="button" class="btn-step" data-step="-5">-5 ms</button>
+                            <button type="button" class="btn-step" data-step="0">0 ms (Reset)</button>
+                            <button type="button" class="btn-step" data-step="+5">+5 ms</button>
+                            <button type="button" class="btn-step" data-step="+25">+25 ms</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Canvas Visualizer Espectral Reactivo FFT -->
                 <div class="visualizer-container">
-                    <canvas id="audio-visualizer" width="600" height="100"></canvas>
+                    <canvas id="audio-visualizer" width="600" height="90"></canvas>
                 </div>
 
                 <!-- Master Volume Control -->
                 <div class="volume-master-card">
                     <div class="volume-header">
-                        <span>Control Master de Volumen</span>
-                        <span class="volume-percentage" id="vol-percent-display">65%</span>
+                        <span>Nivel de Ganancia de este Parlante</span>
+                        <span class="volume-percentage" id="vol-percent-display">75%</span>
                     </div>
                     <div class="slider-wrapper">
                         <button type="button" class="btn-icon" id="btn-mute-toggle" aria-label="Alternar Silencio Mute">🔊</button>
-                        <input type="range" id="volume-slider" min="0" max="100" value="65" aria-label="Ajustar Nivel de Volumen">
+                        <input type="range" id="volume-slider" min="0" max="100" value="75" aria-label="Ajustar Nivel de Volumen">
                         <button type="button" class="btn-icon" id="btn-max-vol" aria-label="Establecer Volumen Máximo">⚡ 100%</button>
                     </div>
                 </div>
 
-                <!-- Equalizer & Bass Boost -->
+                <!-- Equalizer & Bass Boost Físico -->
                 <div class="eq-grid">
                     <div class="eq-card">
                         <div class="eq-title">
-                            <span>Bass Boost Amplificador</span>
+                            <span>Bass Boost Físico</span>
                             <span id="bass-val">+6 dB</span>
                         </div>
                         <input type="range" id="bass-slider" min="0" max="12" value="6" aria-label="Ajuste de Graves Bass Boost">
@@ -173,12 +283,37 @@
                     <button type="button" class="preset-chip" data-preset="club">🔥 Club Máx (+12 dB)</button>
                 </div>
 
-                <!-- Playback Buttons -->
-                <div class="playback-controls">
-                    <button type="button" class="control-btn" id="btn-prev" aria-label="Pista Anterior">⏮️</button>
-                    <button type="button" class="control-btn play-main" id="btn-play-pause" aria-label="Reproducir o Pausar Audio">▶️</button>
-                    <button type="button" class="control-btn" id="btn-next" aria-label="Pista Siguiente">⏭️</button>
-                    <button type="button" class="btn-test-tone" id="btn-test-tone" aria-label="Generar tono armónico de prueba">🎵 Test Sonido</button>
+                <!-- Telemetría de la Flota (Radar de Parlantes Conectados al Cluster) -->
+                <div class="fleet-telemetry-card">
+                    <div class="fleet-header">
+                        <div class="fleet-title-row">
+                            <span class="radar-dot"></span>
+                            <h4>Flota Multi-Parlante Conectada (<span id="fleet-count">2 Nodos</span>)</h4>
+                        </div>
+                        <span class="fleet-status-badge">🟢 Cluster Sincronizado</span>
+                    </div>
+                    <div class="fleet-list" id="fleet-list">
+                        <div class="fleet-node master-node">
+                            <div class="node-left">
+                                <span class="node-badge">👑 HOST</span>
+                                <div>
+                                    <strong class="node-name">Screamer 3 (Parlante Activo)</strong>
+                                    <small class="node-sub">Canal: Estéreo Master • Latencia base 0 ms</small>
+                                </div>
+                            </div>
+                            <span class="node-ping">🟢 Local 0 ms</span>
+                        </div>
+                        <div class="fleet-node">
+                            <div class="node-left">
+                                <span class="node-badge satellite-badge">📻 SATÉLITE</span>
+                                <div>
+                                    <strong class="node-name">JBL Flip 6 Surround</strong>
+                                    <small class="node-sub">Canal: Derecho (R) • Delay calibrado: +30 ms</small>
+                                </div>
+                            </div>
+                            <span class="node-ping">🟢 En Fase (&lt; 2 ms)</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -186,78 +321,43 @@
         <!-- Features Grid -->
         <section id="features" class="features-section">
             <div class="section-header">
-                <h2>Funciones de Control Avanzado</h2>
-                <p>Diseñado para interrupción de foco, gestión de parlantes y potencia sonora</p>
+                <h2>¿Por Qué PartySync Pro Supera al Bluetooth Tradicional?</h2>
+                <p>Diseñado para romper la barrera del 1-a-1 de los parlantes comerciales</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <h3>Scanner Asertivo 100%</h3>
-                    <p>Detecta parlantes mediante la Web Audio System API enumerando los dispositivos de salida vinculados por el sistema operativo.</p>
+                    <div class="feature-icon">📻⚡</div>
+                    <h3>Multi-Marca Universal</h3>
+                    <p>Une un Screamer 3 con un JBL, Sony o Bose sin importar la marca ni comprar cables splitters.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Bypass &amp; Focus Takeover</h3>
-                    <p>Fuerza la sesión de audio del parlante anulando transmisiones de audio secundarias mediante transientes exclusivas.</p>
+                    <div class="feature-icon">⏱️</div>
+                    <h3>Compensador de Latencia</h3>
+                    <p>Ajuste milimétrico de retardo con <code>DelayNode</code> de Web Audio para eliminar el eco entre parlantes.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🔇</div>
-                    <h3>Mute Ultra-Rápido</h3>
-                    <p>Corta el audio instantáneamente con un solo toque sin desconectar la vinculación Bluetooth del parlante.</p>
+                    <div class="feature-icon">🎧</div>
+                    <h3>Escenario Estéreo L / R</h3>
+                    <p>Convierte dos parlantes portátiles en un verdadero par estéreo separando canal izquierdo y derecho.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">📋</div>
-                    <h3>Historial de Versiones</h3>
-                    <p>Accede directamente a los detalles de actualización (v1.0.0 a v1.5.0) presionando la etiqueta de versión.</p>
+                    <div class="feature-icon">📲</div>
+                    <h3>P2P sin Cuentas ni Apps Pesadas</h3>
+                    <p>Funciona directo en el navegador con WebRTC y Web Audio API sin instalar programas de 300 MB.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Instalación — Guía paso a paso (Se oculta permanentemente si la app ya está instalada) -->
+        <!-- Instalación PWA -->
         <section id="download" class="download-section">
             <div class="download-card" id="download-card">
                 <h2>📲 Instalar en tu Celular</h2>
-                <p>Esta app se instala directo desde el navegador. <strong>No necesitas ir a la Play Store.</strong></p>
-
-                <!-- Botón principal PWA -->
+                <p>Esta aplicación se instala directo desde el navegador para acceso inmediato en fiestas y reuniones.</p>
                 <div class="download-buttons">
-                    <button type="button" class="btn-download-main" id="pwa-install-btn" aria-label="Instalar Speaker Remote Pro como aplicación">
+                    <button type="button" class="btn-download-main" id="pwa-install-btn" aria-label="Instalar PartySync Pro">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                        Instalar App Ahora
+                        Instalar PartySync Ahora
                     </button>
-                </div>
-
-                <p class="install-hint" id="install-hint" hidden>✅ ¡App instalada correctamente! La aplicación ya está disponible en tu pantalla de inicio.</p>
-
-                <!-- Guía visual paso a paso -->
-                <div class="install-guide" id="install-guide">
-                    <h3>¿No aparece el botón de instalar? Sigue estos pasos:</h3>
-                    <div class="install-steps">
-                        <div class="install-step">
-                            <div class="step-number">1</div>
-                            <div class="step-content">
-                                <strong>Abre en Chrome o Edge</strong>
-                                <span>Esta página debe abrirse en el navegador <strong>Chrome</strong> o <strong>Edge</strong> de tu celular.</span>
-                            </div>
-                        </div>
-                        <div class="install-step">
-                            <div class="step-number">2</div>
-                            <div class="step-content">
-                                <strong>Toca el menú ⋮ (tres puntos)</strong>
-                                <span>Está arriba a la derecha en Chrome. En Safari (iPhone) toca el botón de compartir ⬆️.</span>
-                            </div>
-                        </div>
-                        <div class="install-step">
-                            <div class="step-number">3</div>
-                            <div class="step-content">
-                                <strong>Selecciona "Instalar aplicación"</strong>
-                                <span>O "Agregar a pantalla de inicio" en iPhone. ¡Listo! La app aparece como ícono.</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="download-buttons" style="margin-top: 20px;">
                     <a href="https://github.com/mauriciano47-pixel/Speaker_remote" target="_blank" rel="noopener noreferrer" class="btn-github" id="github-repo-link">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                         Ver Código en GitHub
@@ -274,126 +374,63 @@
                 <div class="modal-title-group">
                     <span class="modal-icon">🔊</span>
                     <div>
-                        <h3>Scanner Asertivo de Parlantes</h3>
-                        <p>Detección de parlantes vinculados por Audio System API &amp; Bluetooth</p>
+                        <h3>Scanner de Parlantes Bluetooth</h3>
+                        <p>Selecciona la salida de audio de tu dispositivo</p>
                     </div>
                 </div>
                 <button type="button" class="modal-close" id="modal-close-btn" aria-label="Cerrar selector de parlantes">✕</button>
             </div>
-
             <div class="modal-actions-bar">
                 <button type="button" class="btn-modal-scan" id="modal-audio-scan-btn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-                    🎯 Escanear Dispositivos del Sistema Audio
+                    🎯 Dispositivos del Sistema
                 </button>
                 <button type="button" class="btn-modal-scan btn-secondary-modal" id="modal-web-scan-btn">
-                    📶 Escaneo Bluetooth
+                    📶 Escaneo Web Bluetooth
                 </button>
             </div>
-
-            <div class="speaker-list-container" id="speaker-list-container">
-                <!-- Se llena dinámicamente desde app.js -->
-            </div>
+            <div class="speaker-list-container" id="speaker-list-container"></div>
         </div>
     </div>
 
-    <!-- Modal para Historial de Versiones (Changelog) -->
+    <!-- Modal para Historial de Versiones (Changelog v2.0.0) -->
     <div class="modal-overlay" id="version-modal-overlay" hidden>
         <div class="modal-card">
             <div class="modal-header">
                 <div class="modal-title-group">
                     <span class="modal-icon">📋</span>
                     <div>
-                        <h3>Historial de Versiones — Speaker Remote Pro</h3>
-                        <p>Registro de actualizaciones y mejoras publicadas</p>
+                        <h3>Historial de Versiones — PartySync Pro</h3>
+                        <p>Evolución desde Speaker Remote hasta la Red MESH Multi-Parlante</p>
                     </div>
                 </div>
-                <button type="button" class="modal-close" id="version-modal-close-btn" aria-label="Cerrar historial de versiones">✕</button>
+                <button type="button" class="modal-close" id="version-modal-close-btn" aria-label="Cerrar historial">✕</button>
             </div>
-
             <div class="changelog-container">
                 <div class="changelog-item current-ver">
                     <div class="changelog-badge-row">
-                        <span class="ver-badge badge-active">v1.6.0 (Actual)</span>
+                        <span class="ver-badge badge-active">v2.0.0 (Actual)</span>
+                        <span class="ver-date">10 de octubre de 2026</span>
+                    </div>
+                    <h4>📻⚡ Lanzamiento Mayor: PartySync P2P Multi-Parlante</h4>
+                    <ul>
+                        <li><strong>Pivote Estratégico de Valor:</strong> Transformación total de un controlador pasivo a un sistema de audio distribuido P2P multi-parlante.</li>
+                        <li><strong>Sincronización en Fase P2P:</strong> Enlace entre múltiples teléfonos y parlantes con WebRTC y BroadcastChannel.</li>
+                        <li><strong>Compensación de Latencia Acústica:</strong> Nodo <code>DelayNode</code> milimétrico (0-400 ms) para alinear parlantes con diferentes buffers y eliminar el eco.</li>
+                        <li><strong>Asignación Espacial L / R / Subwoofer:</strong> Convierte parlantes independientes en un par estéreo con <code>StereoPannerNode</code>.</li>
+                        <li><strong>Fuentes Múltiples:</strong> Sintetizador Party Groove integrado, cargador de MP3/WAV y Megáfono en vivo.</li>
+                        <li><strong>Telemetría de la Flota:</strong> Monitor de estado y ping en tiempo real para todos los nodos conectados.</li>
+                    </ul>
+                </div>
+                <div class="changelog-item">
+                    <div class="changelog-badge-row">
+                        <span class="ver-badge">v1.6.0</span>
                         <span class="ver-date">5 de octubre de 2026</span>
                     </div>
                     <h4>🎛️ Motor DSP Físico, Espectro Reactivo FFT &amp; Audio Limpio</h4>
                     <ul>
-                        <li><strong>Filtros DSP BiquadFilterNode:</strong> Graves (lowshelf 200 Hz) y agudos (highshelf 3 kHz) enlazados físicamente al procesador de audio web.</li>
-                        <li><strong>Portadora Silenciosa &amp; Cero Zumbidos:</strong> Eliminación del oscilador continuo de 220 Hz; reemplazado por buffer de silencio estéreo para sostener el audio focus sin emitir ruidos molestos.</li>
-                        <li><strong>Analizador de Espectro FFT Real:</strong> Integración de `AnalyserNode` en el Canvas visualizador reemplazando la simulación aleatoria.</li>
-                        <li><strong>Generador de Test de Sonido:</strong> Prueba armónica polifónica para verificación instantánea del enlace acústico con el parlante.</li>
-                        <li><strong>Presets de 1 Clic:</strong> Flat, Bass Boost, Voces y Club Máximo.</li>
-                        <li><strong>Enrutamiento Directo Hardware:</strong> Conexión mediante `setSinkId()` para salidas de audio del sistema seleccionadas.</li>
-                    </ul>
-                </div>
-
-                <div class="changelog-item">
-                    <div class="changelog-badge-row">
-                        <span class="ver-badge">v1.5.0</span>
-                        <span class="ver-date">26 de julio de 2026</span>
-                    </div>
-                    <h4>🔊 Salida Directa de Audio Hardware a Screamer 3</h4>
-                    <ul>
-                        <li><strong>Motor de Sonido HTML5 &amp; MediaSession:</strong> Generación de flujo continuo de medios para obligar a Android/Windows a conectar Chrome como Reproductor de Medios Activo al Screamer 3.</li>
-                        <li><strong>Invalidador de Cache Network-First:</strong> `sw.js` forzado a v1.5.0 con reemplazo inmediato para evitar ver la versión en cache v1.4.0.</li>
-                        <li><strong>Botón Directo:</strong> "🔊 Activar Salida a Screamer 3" en el panel de control.</li>
-                    </ul>
-                </div>
-
-                <div class="changelog-item">
-                    <div class="changelog-badge-row">
-                        <span class="ver-badge">v1.4.0</span>
-                        <span class="ver-date">26 de julio de 2026</span>
-                    </div>
-                    <h4>🎯 Detección Asertiva por Audio System API + Historial UI</h4>
-                    <ul>
-                        <li>Scanner Asertivo 100% vía `navigator.mediaDevices.enumerateDevices`.</li>
-                        <li>Indicador de Versión Interactivo en la barra superior.</li>
-                    </ul>
-                </div>
-
-                <div class="changelog-item">
-                    <div class="changelog-badge-row">
-                        <span class="ver-badge">v1.3.0</span>
-                        <span class="ver-date">26 de julio de 2026</span>
-                    </div>
-                    <h4>🔊 Nombres Comerciales y Ocultación de Anuncios</h4>
-                    <ul>
-                        <li>Selección por Nombre Comercial y botón ✏️ de renombrado.</li>
-                    </ul>
-                </div>
-
-                <div class="changelog-item">
-                    <div class="changelog-badge-row">
-                        <span class="ver-badge">v1.2.0</span>
-                        <span class="ver-date">25 de julio de 2026</span>
-                    </div>
-                    <h4>📲 Instalador PWA &amp; Guía de 3 Pasos</h4>
-                    <ul>
-                        <li>Banner Flotante y guía paso a paso para PWA.</li>
-                    </ul>
-                </div>
-
-                <div class="changelog-item">
-                    <div class="changelog-badge-row">
-                        <span class="ver-badge">v1.1.0</span>
-                        <span class="ver-date">24 de julio de 2026</span>
-                    </div>
-                    <h4>⚡ Audio Focus Takeover &amp; Mute Ultra-Rápido</h4>
-                    <ul>
-                        <li>Modo Dominante para solicitar foco exclusivo de audio.</li>
-                    </ul>
-                </div>
-
-                <div class="changelog-item">
-                    <div class="changelog-badge-row">
-                        <span class="ver-badge">v1.0.0</span>
-                        <span class="ver-date">23 de julio de 2026</span>
-                    </div>
-                    <h4>🎵 Lanzamiento Inicial</h4>
-                    <ul>
-                        <li>Control master de volumen, ecualizador DSP Bass Boost y visualizador Canvas.</li>
+                        <li>Filtros <code>BiquadFilterNode</code> para graves y agudos físicos.</li>
+                        <li>Portadora silenciosa eliminando el zumbido de 220 Hz.</li>
+                        <li>Analizador FFT real con <code>AnalyserNode</code>.</li>
                     </ul>
                 </div>
             </div>
@@ -414,9 +451,9 @@
                 <button type="button" class="modal-close" id="legal-modal-close-btn" aria-label="Cerrar modal legal">✕</button>
             </div>
             <div class="legal-modal-content">
-                <p><strong>Speaker Remote Pro</strong> opera estrictamente bajo el marco de las normativas de telecomunicaciones:</p>
+                <p><strong>PartySync Pro</strong> opera estrictamente bajo el marco de las normativas de telecomunicaciones:</p>
                 <ul>
-                    <li><strong>Ámbito Legítimo:</strong> Control maestro de ganancia física (Web Audio), gestión de foco de audio del OS y enlace Bluetooth autorizado sobre dispositivos y parlantes propios.</li>
+                    <li><strong>Ámbito Legítimo:</strong> Sincronización distribuida P2P y calibración acústica de dispositivos autorizados de forma colaborativa.</li>
                     <li><strong>Prohibición Estricta:</strong> Queda terminantemente prohibido el uso para interferencia no autorizada, saturación de radiofrecuencia (jamming) o sabotaje informático.</li>
                     <li><strong>Reguladores Oficiales:</strong> Conforme a las directrices de SUBTEL (Chile), ENACOM (Argentina), SETELECO (España) y FCC (EE. UU.).</li>
                 </ul>
@@ -426,7 +463,7 @@
     </div>
 
     <footer class="app-footer">
-        <p>© 2026 <strong>Speaker Remote Pro</strong>. Versión <button type="button" class="footer-ver-link" id="footer-version-btn">v1.6.0 (Build 2026.10.05)</button> • <button type="button" class="footer-legal-link" id="footer-legal-btn">⚖️ Marco Legal &amp; Regulatorio</button>. Desarrollado por <strong>Mauricio (mauriciano47-pixel)</strong> &amp; Antigravity AI.</p>
+        <p>© 2026 <strong>PartySync Pro</strong> (por Mauricio Uribe Maldonado &amp; Antigravity AI). Versión <button type="button" class="footer-ver-link" id="footer-version-btn">v2.0.0 MESH (Build 2026.10.10)</button> • <button type="button" class="footer-legal-link" id="footer-legal-btn">⚖️ Marco Legal</button>.</p>
     </footer>
 
     <script src="app.js"></script>

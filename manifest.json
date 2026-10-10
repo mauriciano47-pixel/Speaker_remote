@@ -1,7 +1,7 @@
 {
-  "name": "Speaker Remote Pro",
-  "short_name": "Speaker Remote",
-  "description": "Controlador y Gestor de Parlantes Bluetooth — Interrupción de señal, volumen, mute y ecualizador.",
+  "name": "PartySync Pro",
+  "short_name": "PartySync",
+  "description": "Cluster Multi-Parlante Bluetooth P2P — Sincronización en fase, escenario estéreo L/R y compensador de latencia acústica.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
